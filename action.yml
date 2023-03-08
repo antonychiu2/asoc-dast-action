@@ -10,5 +10,5 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/test/script.sh
-      shell: bash
+    - run: ${{ github.action_path }}/SampleScript.ps1
+      shell: pwsh
