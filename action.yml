@@ -1,0 +1,14 @@
+name: test-powershell-action
+description: 'test description'
+inputs:
+  number1:
+    description: 'the first number'
+    required: true
+  number2:
+    description: 'the second number'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/test/script.sh
+      shell: bash
