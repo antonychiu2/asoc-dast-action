@@ -5,7 +5,7 @@ branding:
   color: blue
 inputs:
   baseurl:
-    description 'baseURL of ASOC API'
+    description: 'baseURL of ASOC API'
     required: true
   asoc_key:
     description: 'API key for connecting to ASoC.'
