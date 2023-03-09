@@ -2,9 +2,10 @@ Write-Host "Starting ASoC script"
 
 #DEBUG
 Write-Warning "Print environment variables:"
-Write-Host "inputs:application_id: " $inputs:application_id
-Write-Host "inputs:baseurl: " $inputs:baseurl
-Write-Host "github.sha" $github.sha
+Write-Host "inputs:application_id: " $env:INPUT_application_id
+Write-Host "inputs:baseurl: " $env:INPUT_baseurl
+Write-Host "github.sha: " $env:github.sha
+dir env:
 
 # ASoC - Login to ASoC with API Key and Secret
 $jsonBody = "
