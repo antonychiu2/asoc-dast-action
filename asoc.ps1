@@ -1,7 +1,9 @@
 Write-Host "Starting ASoC script"
-$env:ASOC_KEY = "abcd"
-$env:ASOC_SECRET = "efgh"
 
+#DEBUG
+Write-Warning "Print environment variables:"
+Write-Host "env:application_id: " $env:application_id
+Write-Host "env:baseurl: " $env:baseurl
 
 # ASoC - Login to ASoC with API Key and Secret
 $jsonBody = "
@@ -10,6 +12,7 @@ $jsonBody = "
 `"KeySecret`": `"$env:ASOC_SECRET`"
 }
 "
+
 $params = @{
     Uri         = "$baseURL/Account/ApiKeyLogin"
     Method      = 'POST'
