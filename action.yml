@@ -23,7 +23,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: 
-        ${{ github.action_path }}/asoc.ps1
+    - run: |
         $env:INPUT_BASEURL = ${{ inputs.baseurl }}
+        ${{ github.action_path }}/asoc.ps1
       shell: pwsh
