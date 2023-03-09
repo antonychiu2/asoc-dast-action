@@ -24,6 +24,11 @@ runs:
   using: "composite"
   steps:
     - run: |
-        $env:INPUT_BASEURL = "${{ inputs.baseurl }}"
+        # $env:INPUT_TEST = "${{ inputs.TEST }}"
+        $env:INPUT_baseurl = "${{ inputs.baseurl }}"
+        $env:INPUT_asoc_key = "${{inputs.asoc_key}}"
+        $env:INPUT_asoc_secret = "${{inputs.asoc_secret}}"
+        $env:INPUT_application_id = "${{inputs.application_id}}"
+
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
