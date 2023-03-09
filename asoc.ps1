@@ -34,11 +34,12 @@ $params = @{
       }
     }
 
-Write-Host $params
+Write-Host @params
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 $Members = Invoke-RestMethod @params
 Write-Host "Auth successful - Token received: $Members.token"
 $bearer_token = $Members.token
+Write-Host $bearer_token
 $ProgressPreference = 'SilentlyContinue'
 
