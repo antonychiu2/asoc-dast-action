@@ -2,8 +2,9 @@ Write-Host "Starting ASoC script"
 
 #DEBUG
 Write-Warning "Print environment variables:"
-Write-Host "env:application_id: " $env:application_id
-Write-Host "env:baseurl: " $env:baseurl
+Write-Host "inputs:application_id: " $inputs:application_id
+Write-Host "inputs:baseurl: " $inputs:baseurl
+Write-Host "github.sha" $github.sha
 
 # ASoC - Login to ASoC with API Key and Secret
 $jsonBody = "
@@ -14,7 +15,7 @@ $jsonBody = "
 "
 
 $params = @{
-    Uri         = "$baseURL/Account/ApiKeyLogin"
+    Uri         = "$inputs:baseurl/Account/ApiKeyLogin"
     Method      = 'POST'
     Body        = $jsonBody
     Headers = @{
