@@ -8,6 +8,7 @@ Write-Host $input:INPUT_BASEURL
 Write-Host ${INPUT_BASEURL}
 Write-Host ${$input:INPUT_BASEURL}
 Write-Host ${$input:BASEURL}
+Write-Host $input:baseurl
 
 Write-Host ${github.action_path}
 Write-Host "github.sha: " $env:GITHUB_SHA

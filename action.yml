@@ -25,5 +25,5 @@ runs:
   steps:
     - run: 
         ${{ github.action_path }}/asoc.ps1
-        
+        $INPUT_BASEURL = ${{ inputs.baseurl }}
       shell: pwsh
