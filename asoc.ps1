@@ -4,6 +4,12 @@ Write-Host "Starting ASoC script"
 Write-Warning "Print environment variables:"
 Write-Host "inputs:application_id: " $env:INPUT_APPLICATION_ID
 Write-Host "inputs:baseurl: " $env:INPUT_BASEURL
+Write-Host $input:INPUT_BASEURL
+Write-Host ${INPUT_BASEURL}
+Write-Host ${$input:INPUT_BASEURL}
+Write-Host ${$input:BASEURL}
+
+Write-Host ${github.action_path}
 Write-Host "github.sha: " $env:GITHUB_SHA
 dir env:
 
