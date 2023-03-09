@@ -1,2 +1,2 @@
 $PSVersionTable
-ls
+ls -l
