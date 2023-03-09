@@ -17,13 +17,13 @@ dir env:
 # ASoC - Login to ASoC with API Key and Secret
 $jsonBody = "
 {
-`"KeyId`": `"$env:ASOC_KEY`",
-`"KeySecret`": `"$env:ASOC_SECRET`"
+`"KeyId`": `"$env:INPUT_ASOC_KEY`",
+`"KeySecret`": `"$env:INPUT_ASOC_SECRET`"
 }
 "
 
 $params = @{
-    Uri         = "$inputs:baseurl/Account/ApiKeyLogin"
+    Uri         = "$env:INPUT_BASEURL/Account/ApiKeyLogin"
     Method      = 'POST'
     Body        = $jsonBody
     Headers = @{
