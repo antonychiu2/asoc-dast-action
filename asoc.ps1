@@ -69,6 +69,8 @@ function Run-ASoC-DynamicAnalyzerNoAuth {
     `"Personal`": false,
   }
   "
+  write-host $jsonBody
+  
   $params = @{
       Uri         = "$env:INPUT_baseurl/Scans/DynamicAnalyzer"
       Method      = 'POST'
