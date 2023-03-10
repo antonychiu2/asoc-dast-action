@@ -22,6 +22,10 @@ inputs:
   scan_type:
     description: 'The type of scan, staging or production'
     required: false
+  starting_URL:
+    description: 'The starting URL of the DAST scan'
+    required: false
+
 
 runs:
   using: "composite"
@@ -34,6 +38,7 @@ runs:
         $env:INPUT_application_name = "${{inputs.application_name}}"
         $env:INPUT_scan_name = "${{ inputs.scan_name }}"
         $env:INPUT_scan_type = "${{ inputs.scan_type }}"
+        $env:INPUT_starting_URL = "${{ inputs.starting_URL }}"
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
