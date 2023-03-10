@@ -19,6 +19,9 @@ inputs:
   scan_name:
     description: 'The name of the scan created in ASoC.'
     required: false
+  scan_type:
+    description: 'The type of scan, staging or production'
+    required: false
 
 runs:
   using: "composite"
@@ -30,6 +33,7 @@ runs:
         $env:INPUT_asoc_secret = "${{inputs.asoc_secret}}"
         $env:INPUT_application_name = "${{inputs.application_name}}"
         $env:INPUT_scan_name = "${{ inputs.scan_name }}"
+        $env:INPUT_scan_type = "${{ inputs.scan_type }}"
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
