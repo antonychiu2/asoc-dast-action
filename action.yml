@@ -20,13 +20,14 @@ inputs:
     description: 'The name of the scan created in ASoC.'
     required: false
   scan_type:
-    description: 'The type of scan, staging or production'
+    description: 'The type of scan - staging or production'
     required: false
   starting_URL:
     description: 'The starting URL of the DAST scan'
     required: false
-
-
+  login_method:
+    description: 'Login Method of the scan, can be none, userpass, or record'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -39,6 +40,7 @@ runs:
         $env:INPUT_scan_name = "${{ inputs.scan_name }}"
         $env:INPUT_scan_type = "${{ inputs.scan_type }}"
         $env:INPUT_starting_URL = "${{ inputs.starting_URL }}"
+        $env:INPUT_login_method = "${{ inputs.login_method }}"
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
