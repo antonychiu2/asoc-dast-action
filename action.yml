@@ -13,7 +13,7 @@ inputs:
   asoc_secret:
     description: 'Secret for connecting to ASoC.'
     required: true
-  application_id:
+  application_name:
     description: 'The ASoC application id where your scan will appear.'
     required: true
   scan_name:
@@ -28,7 +28,8 @@ runs:
         $env:INPUT_baseurl = "${{ inputs.baseurl }}"
         $env:INPUT_asoc_key = "${{inputs.asoc_key}}"
         $env:INPUT_asoc_secret = "${{inputs.asoc_secret}}"
-        $env:INPUT_application_id = "${{inputs.application_id}}"
+        $env:INPUT_application_name = "${{inputs.application_name}}"
+        $env:INPUT_scan_name = "${{ inputs.scan_name }}"
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
