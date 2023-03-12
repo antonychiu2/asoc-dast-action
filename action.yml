@@ -22,6 +22,8 @@ inputs:
   scan_type:
     description: 'The type of scan - staging or production'
     required: false
+    default: 'staging'
+
   
   #dast or scan file
   dynamic_scan_type: 
@@ -39,6 +41,7 @@ inputs:
   login_method:
     description: 'Login Method of the scan, can be none, userpass, or record'
     required: false
+    default: 'none'
   optimization:
     description: 'Optimization level: NoOptimization, Fast, Faster, Fastest'
     required: false
@@ -68,21 +71,28 @@ inputs:
   login_sequence_file:
     description: 'Provide a path to the Login Traffic File data. Supported file type: CONFIG: AppScan Activity Recorder file'
     required: false
+    
   #misc settings
   email_notification:
     description: 'send email notification on scan completion'
     required: false
+    default: 'false'
+
   personal_scan:
     description: 'set to personal scan'
     required: false
+    default: 'false'
   intervention:
     description: 'allow scan intervention'
     required: false
-  
+    default: 'false'
+
   #Wait for analysis settings
   wait_for_analysis:
     description: 'wait for analysis to complete before finishing job'
     required: true
+    default: 'true'
+
   wait_for_analysis_timeout_minutes:
     description: 'maximum duration in seconds before the job will no longer wait and proceeds to complete, default is 360 (6 hours)'
     required: false
