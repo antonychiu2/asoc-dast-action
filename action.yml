@@ -22,12 +22,79 @@ inputs:
   scan_type:
     description: 'The type of scan - staging or production'
     required: false
+  
+  #dast or scan file
+  dynamic_scan_type: 
+    description: 'Choose between dast or upload. DAST will require you to specify starting URL and login, while upload will only require you to specify a .scan or .scant file'
+    required: true
+    default: dast
+  scan_file:
+    description: "If dynamic_scan_type is set to \"upload\", then you will need to provide the .scan or .scant file here"
+    required: false
+
+  #DAST starter config
   starting_URL:
     description: 'The starting URL of the DAST scan'
     required: false
   login_method:
     description: 'Login Method of the scan, can be none, userpass, or record'
     required: false
+  optimization:
+    description: 'Optimization level: NoOptimization, Fast, Faster, Fastest'
+    required: false
+    default: NoOptimization
+  
+  #NETWORK
+  network:
+    description: 'public or private network'
+    required: false
+    default: 'public'
+  presence_id:
+    description: 'if network is set to private, provide the AppScan Presence ID'
+    required: false
+  
+  #BASIC LOGIN
+  login_user:
+    description: 'if login_method is userpass, provide the username here'
+    required: false
+  login_password:
+    description: 'if login_method is userpass, provide the password here'
+    required: false
+  login_extra_field:
+    description: 'if login_method is userpass, provide optional 3rd login value'
+    required: false
+
+  #RECORDEDLOGIN
+  login_sequence_file:
+    description: 'Provide a path to the Login Traffic File data. Supported file type: CONFIG: AppScan Activity Recorder file'
+    required: false
+  #misc settings
+  email_notification:
+    description: 'send email notification on scan completion'
+    required: false
+  personal_scan:
+    description: 'set to personal scan'
+    required: false
+  intervention:
+    description: 'allow scan intervention'
+    required: false
+  
+  #Wait for analysis settings
+  wait_for_analysis:
+    description: 'wait for analysis to complete before finishing job'
+    required: true
+  wait_for_analysis_timeout_minutes:
+    description: 'maximum duration in seconds before the job will no longer wait and proceeds to complete, default is 360 (6 hours)'
+    required: false
+    default: '360'
+  
+  #fail build settings
+  fail_for_noncompliance:
+    description: 'If wait_for_analysis is true, fail the job if any non-compliant issues are found in the scan'
+    required: false
+    default: 'false'
+
+
 runs:
   using: "composite"
   steps:
@@ -41,6 +108,38 @@ runs:
         $env:INPUT_scan_type = "${{ inputs.scan_type }}"
         $env:INPUT_starting_URL = "${{ inputs.starting_URL }}"
         $env:INPUT_login_method = "${{ inputs.login_method }}"
+        $env:INPUT_optimization = "${{ inputs.optimization }}"
+
+        #DAST or SCAN File
+        $env:INPUT_dynamic_scan_type = "${{ inputs.dynamic_scan_type }}"
+        $env:INPUT_scan_file = "${{ inputs.scan_file }}"
+
+        #NETWORK
+        $env:INPUT_network = "${{ inputs.network }}"
+        $env:INPUT_presence_id = "${{ inputs.presence_id }}"
+
+        #BASICAUTH
+        $env:INPUT_login_user = "${{ inputs.login_user }}"
+        $env:INPUT_login_password = "${{ inputs.login_password }}"
+        $env:INPUT_login_extra_field = "${{ inputs.login_extra_field }}"
+
+        #RECORDEDLOGIN
+        $env:INPUT_login_sequence_file = "${{ inputs.login_sequence_file }}"
+
+        #MISC
+        $env:INPUT_email_notification = "${{ inputs.email_notification }}"
+        $env:INPUT_personal_scan = "${{ inputs.personal_scan }}"
+        $env:INPUT_intervention = "${{ inputs.intervention }}"
+
+        $env:INPUT_wait_for_analysis = "${{ inputs.wait_for_analysis }}"
+        $env:INPUT_wait_for_analysis_timeout_minutes = "${{ inputs.wait_for_analysis_timeout_minutes }}"
+        $env:INPUT_fail_for_noncompliance = "${{ inputs.fail_for_noncompliance }}"
+
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
+    - uses: actions/upload-artifact@v2
+      name: Upload HCL AppScan Static Analysis HTML Report to Github Artifacts
+      with:
+        name: AppScan Static Analysis HTML Security Scan Report 
+        path: AppScan_Security_Report.html
