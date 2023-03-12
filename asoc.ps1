@@ -269,8 +269,7 @@ function Run-ASoC-ReportCompletionChecker($reportID){
     $report_status = $output.Status
     Start-Sleep -Seconds 5
     Write-Host "Generating Report... Progress: " $output.Progress "%"
-  }
-  
+  } 
 }
 
 function Run-ASoC-DownloadReport($eportID){
