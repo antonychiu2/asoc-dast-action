@@ -158,6 +158,10 @@ function Run-ASoC-DynamicAnalyzerAPI($json){
         Authorization = "Bearer $global:BearerToken"
       }
     }
+
+  #DEBUG
+  Write-Host $params
+  
   $Members = Invoke-RestMethod @params
   return $Members.Id
 }
@@ -174,6 +178,9 @@ function Run-ASoC-DynamicAnalyzerWithFileAPI($json){
         Authorization = "Bearer $global:BearerToken"
       }
     }
+  #DEBUG
+  Write-Host $params
+
   $Members = Invoke-RestMethod @params
   return $Members.Id
 }
@@ -205,6 +212,9 @@ function Run-ASoC-ScanCompletionChecker($scanID){
       Authorization = "Bearer $global:BearerToken"
     }
   }
+  #DEBUG
+  Write-Host $params
+
   $counterTimerInSeconds = 0
   Write-Host "Waiting for Scan Completion..." -NoNewLine
   $waitIntervalInSeconds = 30
@@ -247,6 +257,10 @@ function Run-ASoC-GenerateReport ($scanID) {
       'Notes' = "Github SHA: $env:GITHUB_SHA"
     }
   }
+  #DEBUG
+  Write-Host $params
+  write-host $body
+
   $output_runreport = Invoke-RestMethod @params -Body ($body|ConvertTo-JSON)
   $report_ID = $output_runreport.Id
   return $report_ID
@@ -263,6 +277,9 @@ function Run-ASoC-ReportCompletionChecker($reportID){
       Authorization = "Bearer $global:BearerToken"
     }
   }
+  #DEBUG
+  Write-Host $params
+
   $report_status ="Not Ready"
   while($report_status -ne "Ready"){
     $output = Invoke-RestMethod @params
@@ -283,6 +300,9 @@ function Run-ASoC-DownloadReport($eportID){
       Authorization = "Bearer $global:BearerToken"
     }
   }
+  #DEBUG
+  Write-Host $params
+  
   $output_runreport = Invoke-RestMethod @params
   Out-File -InputObject $output_runreport -FilePath .\AppScan_Security_Report.html
   
