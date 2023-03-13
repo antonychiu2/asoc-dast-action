@@ -37,7 +37,7 @@ $global:jsonBodyInPSObject = @{
 }
 
 #LOAD ALL ASOC FUNCTIONS FROM LIBRARY FILE asoc.ps1
-. ".\asoc.ps1"
+. "./asoc.ps1"
 #MAIN
 Login-ASoC
 
