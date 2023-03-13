@@ -1,4 +1,4 @@
-name: asoc-dast-action
+name: AppScan On Cloud DAST Action
 description: 'Scan for security issues in web applications'
 branding:
   icon: check-circle

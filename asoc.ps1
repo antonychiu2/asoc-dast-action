@@ -216,7 +216,7 @@ function Run-ASoC-GenerateReport ($scanID) {
       'MinimizeDetails' = "true"
       'Articles' = "true"
       'ReportFileType' = "HTML"
-      'Title' = "false"
+      'Title' = "$global:scan_name"
       'Locale' = "en-US"
       'Notes' = "Github SHA: $env:GITHUB_SHA"
     }
