@@ -71,7 +71,7 @@ jobs:
 
 ```
 
-# Example 2 - DAST scan using a altoro.scant template with private network through appscan presence
+# Example 2 - DAST scan using a .scant template file with private network through appscan presence
 ```yaml
 name: "HCL AppScan DAST"
 on:
