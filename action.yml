@@ -154,7 +154,8 @@ runs:
 
         $env:INPUT_fail_by_severity = "${{ inputs.fail_by_severity }}"
         $env:INPUT_failure_threshold = "${{ inputs.failure_threshold }}"
-
+        
+        ${{ github.action_path }}/asoc.ps1
         ${{ github.action_path }}/main.ps1
       shell: pwsh
     - uses: actions/upload-artifact@v3

@@ -8,7 +8,7 @@ $env:GITHUB_REPOSITORY = "antonychiu2/github-demo"
 $env:INPUT_scan_type = 'staging' #production, staging
 $env:INPUT_starting_URL = "https://demo.testfire.net?mode=demo"
 $env:INPUT_optimization = 'NoOptimization'
-
+$env:GITHUB_ACTION_PATH = "."
 
 #IF LOGIN = NONE
 
