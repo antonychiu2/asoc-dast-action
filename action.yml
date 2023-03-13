@@ -159,7 +159,7 @@ runs:
         ${{ github.action_path }}/main.ps1
       shell: pwsh
     - uses: actions/upload-artifact@v3
-      name: Upload HCL AppScan Static Analysis HTML Report to Github Artifacts
+      name: Upload HCL AppScan HTML Report to Github Artifacts
       with:
-        name: AppScan Static Analysis HTML Security Scan Report 
-        path: *.html
+        name: AppScan Security Scan HTML Report 
+        path: /*.html
