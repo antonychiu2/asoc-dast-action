@@ -17,8 +17,8 @@ If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://
 # Required Inputs
 | Name |   Description    |
 |    :---:    |    :---:    |
-| asoc_key | Your API key from [the API page](https://cloud.appscan.com/main/settings) |
-| asoc_secret | Your API secret from [the API page](https://cloud.appscan.com/main/settings) |
+| asoc_key | Your API key from [the API page](https://cloud.appscan.com/main/apikey) |
+| asoc_secret | Your API secret from [the API page](https://cloud.appscan.com/main/apikey) |
 | application_id | The ID of the application in ASoC. |
 
 # Optional Inputs
