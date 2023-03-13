@@ -10,7 +10,7 @@ If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://
 ## Setup
 1. Generate your API key and API secret on [the API page](https://cloud.appscan.com/main/apikey).
 - The API key and API secret map to the `asoc_key` and `asoc_secret` parameters for this action. Store the API key and API secret as [secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) in your repository.
-![image](https://user-images.githubusercontent.com/5158535/224789951-00b6ca1f-3800-4074-83f2-42b25ff63f35.png)
+![adingkeys_animation](img/keyAndSecret.gif)
 2. Create the application in ASoC. 
 - The application ID in ASoC maps to application_id for this action.
 
