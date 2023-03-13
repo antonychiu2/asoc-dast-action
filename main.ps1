@@ -54,7 +54,7 @@ Write-Host "Scan is initiated and can be viewed in ASoC Scan Dashboard:"
 Write-Host $scanOverviewPage -ForegroundColor Green
 
 #If wait_for_analysis is set to true, we proceed to wait before generating report
-if(-not($wait_for_analysis -eq $true)){
+if(-not($INPUT_wait_for_analysis -eq $true)){
 
   #Check for report completion
   Run-ASoC-ScanCompletionChecker ($global:scanId)
