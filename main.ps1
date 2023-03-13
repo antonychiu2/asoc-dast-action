@@ -5,6 +5,7 @@ Write-Host "Starting ASoC script"
 Write-Warning "Print environment variables:"
 Write-Host "github.sha: " $env:GITHUB_SHA
 dir env:
+ls -l
 
 #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 
