@@ -103,7 +103,7 @@ function Run-ASoC-DynamicAnalyzerRecordedLogin{
 
 function Run-ASoC-DynamicAnalyzerWithFile{
 
-  $FileID = Run-ASoC-FileUpload($env:INPUT_scan_file)
+  $FileID = Run-ASoC-FileUpload($env:INPUT_scan_or_scant_file)
   $global:jsonBodyInPSObject.Add("ScanFileId",$FileID)
 
   return Run-ASoC-DynamicAnalyzerWithFileAPI($jsonBodyInPSObject | ConvertTo-Json)
