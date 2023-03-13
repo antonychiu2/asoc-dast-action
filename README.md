@@ -42,7 +42,7 @@ If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://
 |wait_for_analysis_timeout_minutes|(applicable only if **wait_for_analysis** = true) Maximum duration in minutes before the job will no longer wait and proceeds to complete, default is 360 (6 hours)|360||
 |fail_for_noncompliance|If **fail_for_noncompliance** is true, fail the job if any non-compliant issues are found in the scan|false|true, false|
 |fail_by_severity|If **fail_by_severity** is set to true, failure_threshold must also be set. This will fail the job if any issues equal to or higher (more severe) than **failure_threshold** are found in the scan|false|false|
-|failure_threshold|If **fail_for_noncompliance** is enabled, the severity that indicates a failure. Lesser severities will not be considered a failure. For example, if failure_threshold is set to Medium, Informational and/or Low severity issues will not cause a failure. Medium, High, and/or Critical issues will cause a failure.|High|Informational, Low, Medium, High, Critical|
+|failure_threshold|(applicable only if **failure_threshold** = true) Set the severity level that indicates a failure. Lesser severities will not be considered a failure. For example, if **failure_threshold** is set to Medium, Informational and/or Low severity issues will not cause a failure. Medium, High, and/or Critical issues will cause a failure.|High|Informational, Low, Medium, High, Critical|
 
 # Example 1 - DAST scan with basic username and password login method, using the public network
 ```yaml
