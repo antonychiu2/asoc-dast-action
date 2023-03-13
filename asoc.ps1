@@ -1,40 +1,4 @@
-Write-Host "Starting ASoC script"
-
-#DEBUG
-Write-Warning "Print environment variables:"
-Write-Host "github.sha: " $env:GITHUB_SHA
-dir env:
-
-#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
-
-#VARIABLES
-$global:BearerToken = ""
-$global:scan_name = "$env:GITHUB_REPOSITORY $env:GITHUB_SHA"
-$global:jsonBodyInPSObject = ""
-$global:scanId
-$global:BaseAPIUrl = ""
-$global:BaseAPIUrl = $env:INPUT_baseurl + "/api/V2"
-
-#INITIALIZE
-#Construct base JSON Body for DAST Scan for API DynamicAnalyzer and DynamicAnalyzerWithFiles
-$global:jsonBodyInPSObject = @{
-  ScanType = $env:INPUT_scan_type
-  IncludeVerifiedDomains = $true
-  StartingUrl = $env:INPUT_starting_URL
-  TestOptimizationLevel = $env:INPUT_optimization
-  UseAutomaticTimeout = $true
-  MaxRequestsIn = 10
-  MaxRequestsTimeFrame = 1000
-  OnlyFullResults = $true
-  FullyAutomatic = $true
-  ScanName = $global:scan_name
-  EnableMailNotification = $env:INPUT_email_notification
-  Locale = 'en-US'
-  AppId = $env:INPUT_application_id
-  Execute = $true
-  Personal = $env:INPUT_personal_scan
-}
-
+Write-Host "Loading Library functions from asoc.ps1"
 #FUNCTIONS
 function Login-ASoC {
 
@@ -302,41 +266,93 @@ function Run-ASoC-DownloadReport($eportID){
   }
   #DEBUG
   Write-Host $params
-  
+
   $output_runreport = Invoke-RestMethod @params
   Out-File -InputObject $output_runreport -FilePath .\AppScan_Security_Report.html
   
 }
-
-#MAIN
-Login-ASoC
-
-#CHECK NETWORK, if private, then set presence ID
-Set-AppScanPresence
-
-#Run DAST Scan
-$global:scanId = Run-ASoC-DAST
-
-#Display ASoC Scan URL
-$scanOverviewPage = $env:INPUT_baseurl + "/main/myapps/" + $env:INPUT_application_id + "/scans/" + $global:scanId
-Write-Host "Scan is initiated and can be viewed in ASoC Scan Dashboard:" 
-Write-Host $scanOverviewPage -ForegroundColor Green
-
-#If wait_for_analysis is set to true, we proceed to wait before generating report
-if(-not($wait_for_analysis -eq $true)){
-
-  #Check for report completion
-  Run-ASoC-ScanCompletionChecker ($global:scanId)
-
-  #Send for report generation
-  $reportID = Run-ASoC-GenerateReport ($global:scanId)
-  
-  #Check for report generation completion
-  Run-ASoC-ReportCompletionChecker ($reportID)
-
-  #Download report from ASoC
-  Run-ASoC-DownloadReport($reportID){
-
+#policies options are 'All' or 'None'
+function Run-ASoC-GetIssueCount($scanID, $policyScope){
+    
+  #/api/v2/Issues/CountBySeverity/{scope}/{scopeId}
+  $params = @{
+      Uri         = "$global:BaseAPIUrl/Issues/CountBySeverity/Scan/$scanID"+"?applyPolicies="+"$policyScope"
+      Method      = 'GET'
+      Headers = @{
+      'Content-Type' = 'application/json'
+      Authorization = "Bearer $global:BearerToken"
+      }
   }
+  
+  #DEBUG
+  Write-Host $params
+
+  $jsonOutput = Invoke-RestMethod @params
+
+  #DEBUG
+  #$jsonOutput
+
+  return $jsonOutput
+
 }
-ls -l
+
+function FailBuild-ByNonCompliance($issueCountJson){
+  
+  $failBuild = $false
+  $totalIssues = 0
+  foreach($i in $issueCountJson){
+    $totalIssues = $totalIssues + $i.Count
+  }
+  
+  #DEBUG
+  Write-Host "Total issues: $totalIssues"
+  if($totalIssues -gt 0){
+    $failBuild = $true
+  }
+  return $failBuild
+}
+
+
+function FailBuild-BySeverity($issueCountJson, $failureThresholdText){
+
+  #0 = Informational
+  #1 = Low
+  #2 = Medium
+  #3 = High
+  #4 = Critical
+  $failureThresholdNum = 0
+  $failureThresholdNum = Get-SeverityValue($failureThresholdText)
+  $totalIssuesCountAboveThreshold = 0
+  $failBuild = $false
+
+  foreach($i in $issueCountJson){
+    $sevNum = Get-SeverityValue($i.Severity)
+    if($sevNum -ge $failureThresholdNum){
+      $totalIssuesCountAboveThreshold = $totalIssuesCountAboveThreshold + $i.Count
+    }
+  }
+  
+  #DEBUG
+  Write-Host "Total count of issues above threshold: $totalIssuesCountAboveThreshold"
+
+  if($totalIssuesCountAboveThreshold -gt 0){
+    $failBuild = $true
+  }
+  return $failBuild
+}
+
+
+function Get-SeverityValue($severityText){
+
+  $severityValue = 1;
+
+  switch($severityText){
+    'Informational' {$severityValue = 0;break}
+    'Low'           {$severityValue = 1;break}
+    'Medium'        {$severityValue = 2;break}
+    'High'          {$severityValue = 3;break}
+    'Critical'      {$severityValue = 4;break}
+  }
+  return $severityValue
+
+}

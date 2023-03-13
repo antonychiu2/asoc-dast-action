@@ -38,6 +38,8 @@ $env:INPUT_personal_scan = 'false'
 $env:INPUT_intervention = 'true'
 $env:INPUT_wait_for_analysis = 'true'
 $env:INPUT_wait_for_analysis_timeout_minutes = '360'
-$env:INPUT_fail_for_noncompliance = 'false'
+$env:INPUT_fail_for_noncompliance = 'true'
+$env:INPUT_fail_by_severity = 'false'
+$env:INPUT_failure_threshold = 'Critical'
 
-./asoc.ps1
+. ".\main.ps1"

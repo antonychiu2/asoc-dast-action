@@ -103,7 +103,14 @@ inputs:
     description: 'If wait_for_analysis is true, fail the job if any non-compliant issues are found in the scan'
     required: false
     default: 'false'
-
+  fail_by_severity:
+    description: 'If fail_by_severity is set to true, failure_threshold must also be set. This will fail the job if any issues equal to or higher (more severe) than failure_threshold are found in the scan.'
+    required: false
+    default: 'false'
+  failure_threshold:
+    description: 'If fail_for_noncompliance is enabled, the severity that indicates a failure. Lesser severities will not be considered a failure. For example, if failure_threshold is set to Medium, Informational and/or Low severity issues will not cause a failure. Medium, High, and/or Critical issues will cause a failure.	'
+    required: false
+    default: 'High'
 
 runs:
   using: "composite"
@@ -145,10 +152,12 @@ runs:
         $env:INPUT_wait_for_analysis_timeout_minutes = "${{ inputs.wait_for_analysis_timeout_minutes }}"
         $env:INPUT_fail_for_noncompliance = "${{ inputs.fail_for_noncompliance }}"
 
+        $env:INPUT_fail_by_severity = "${{input.fail_by_severity}}"
+        $env:INPUT_failure_threshold = "${{input.failure_threshold}}"
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       name: Upload HCL AppScan Static Analysis HTML Report to Github Artifacts
       with:
         name: AppScan Static Analysis HTML Security Scan Report 
