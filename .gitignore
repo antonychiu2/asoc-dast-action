@@ -2,3 +2,8 @@
 testMain.ps1
 testResultProcessor.ps1
 *.pdf
+tags_to_remove.txt
+*.scan
+*.scant
+*.config
+*.txt
