@@ -152,8 +152,8 @@ runs:
         $env:INPUT_wait_for_analysis_timeout_minutes = "${{ inputs.wait_for_analysis_timeout_minutes }}"
         $env:INPUT_fail_for_noncompliance = "${{ inputs.fail_for_noncompliance }}"
 
-        $env:INPUT_fail_by_severity = "${{ input.fail_by_severity }}"
-        $env:INPUT_failure_threshold = "${{ input.failure_threshold }}"
+        $env:INPUT_fail_by_severity = "${{ inputs.fail_by_severity }}"
+        $env:INPUT_failure_threshold = "${{ inputs.failure_threshold }}"
 
         ${{ github.action_path }}/asoc.ps1
       shell: pwsh
