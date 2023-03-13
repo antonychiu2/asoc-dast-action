@@ -54,7 +54,7 @@ Write-Host "Scan is initiated and can be viewed in ASoC Scan Dashboard:"
 Write-Host $scanOverviewPage -ForegroundColor Green
 
 #If wait_for_analysis is set to true, we proceed to wait before generating report
-if(-not($INPUT_wait_for_analysis -eq $true)){
+if($INPUT_wait_for_analysis){
 
   #Check for report completion
   Run-ASoC-ScanCompletionChecker ($global:scanId)
@@ -106,4 +106,7 @@ if(-not($INPUT_wait_for_analysis -eq $true)){
         Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_failure_threshold." -ForegroundColor Green
     }
   }
+}else{
+  write-host "Since wait_for_analysis is set to false, the job is now complete. Exiting..."
+  Exit 0
 }
