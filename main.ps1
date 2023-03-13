@@ -66,42 +66,44 @@ if(-not($wait_for_analysis -eq $true)){
   Run-ASoC-ReportCompletionChecker ($reportID)
 
   #Download report from ASoC
-  Run-ASoC-DownloadReport($reportID){
-
-  }
-}
-
-#Fail the build if fail_for_noncompliance is true and scan results in exceeding the threshold set in fail_threshold
-if($env:INPUT_fail_for_noncompliance -eq $true){
-
-  $jsonData = Run-ASoC-GetIssueCount $global:scanId 'All'
-  $jsonData
+  Run-ASoC-DownloadReport($reportID)
   
-  $failBuild = $false
-  $failBuild = FailBuild-ByNonCompliance($jsonData)
-  if($failBuild -eq $true){
-      Write-Error "Job failed - Scan has determined non-compliance with the application policy set in ASoC."
-      exit 1
-  }
-  else{
-      Write-Host "Job Successful - Scan has determined compliance with policy current application policies set in ASoC." -ForegroundColor Green
-  }
-}
-
-#Fail the build if fail_by_severity is true and scan results in non-compliance
-if($env:INPUT_fail_by_severity -eq $true){
+  #issues found in scan
   $jsonData = Run-ASoC-GetIssueCount $global:scanId 'None'
   $jsonData
-  $failBuild = $false
-  $failBuild = FailBuild-BySeverity $jsonData $env:INPUT_failure_threshold
-  Write-Host $failBuild 
 
-  if($failBuild -eq $true){
-      Write-Error "Job failed - Scan has found security issues equal to or above the threshold set: $env:INPUT_failure_threshold"
-      exit 1
+    
+  #Fail the build if fail_for_noncompliance is true and scan results in exceeding the threshold set in fail_threshold
+  if($env:INPUT_fail_for_noncompliance -eq $true){
+
+    $jsonData = Run-ASoC-GetIssueCount $global:scanId 'All'
+    #$jsonData
+    
+    $failBuild = $false
+    $failBuild = FailBuild-ByNonCompliance($jsonData)
+    if($failBuild -eq $true){
+        Write-Error "Job failed - Scan has determined non-compliance with the application policy set in ASoC."
+        exit 1
+    }
+    else{
+        Write-Host "Job Successful - Scan has determined compliance with policy current application policies set in ASoC." -ForegroundColor Green
+    }
   }
-  else{
-      Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_failure_threshold." -ForegroundColor Green
+
+  #Fail the build if fail_by_severity is true and scan results in non-compliance
+  if($env:INPUT_fail_by_severity -eq $true){
+    $jsonData = Run-ASoC-GetIssueCount $global:scanId 'None'
+    #$jsonData
+    $failBuild = $false
+    $failBuild = FailBuild-BySeverity $jsonData $env:INPUT_failure_threshold
+    Write-Host $failBuild 
+
+    if($failBuild -eq $true){
+        Write-Error "Job failed - Scan has found security issues equal to or above the threshold set: $env:INPUT_failure_threshold"
+        exit 1
+    }
+    else{
+        Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_failure_threshold." -ForegroundColor Green
+    }
   }
 }
-

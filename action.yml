@@ -30,7 +30,7 @@ inputs:
     description: 'Choose between dast or upload. DAST will require you to specify starting URL and login, while upload will only require you to specify a .scan or .scant file'
     required: true
     default: dast
-  scan_file:
+  scan_or_scant_file:
     description: "If dynamic_scan_type is set to \"upload\", then you will need to provide the .scan or .scant file here"
     required: false
 
@@ -39,7 +39,7 @@ inputs:
     description: 'The starting URL of the DAST scan'
     required: false
   login_method:
-    description: 'Login Method of the scan, can be none, userpass, or record'
+    description: 'Login Method of the scan, can be none, userpass, or recorded'
     required: false
     default: 'none'
   optimization:
@@ -129,7 +129,7 @@ runs:
 
         #DAST or SCAN File
         $env:INPUT_dynamic_scan_type = "${{ inputs.dynamic_scan_type }}"
-        $env:INPUT_scan_file = "${{ inputs.scan_file }}"
+        $env:INPUT_scan_or_scant_file = "${{ inputs.scan_or_scant_file }}"
 
         #NETWORK
         $env:INPUT_network = "${{ inputs.network }}"
