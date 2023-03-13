@@ -1,4 +1,4 @@
-name: AppScan On Cloud DAST Action
+name: AppScan On Cloud DAST
 description: 'Scan for security issues in web applications'
 branding:
   icon: check-circle
