@@ -23,7 +23,7 @@ If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://
 
 # Optional Inputs
 | Name | Description | Default Value | Available options |
-|    :---:    |    :---:    |    :---:    |
+|    :---:    |    :---:    |    :---:    |    :---:    |
 | scan_name | The name of the scan created in ASoC. | The GitHub repository name + GITHUB SHA | text |
 | scan_type | The type of the scan | staging | staging, production |
 | dynamic_scan_type | Choose between dast or upload. DAST will require you to specify starting URL and login, while upload will only require you to specify a .scan or .scant file | dast | dast, upload |
