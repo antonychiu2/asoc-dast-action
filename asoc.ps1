@@ -268,7 +268,7 @@ function Run-ASoC-DownloadReport($eportID){
   Write-Host $params
 
   $output_runreport = Invoke-RestMethod @params
-  Out-File -InputObject $output_runreport -FilePath .\AppScan_Security_Report.html
+  Out-File -InputObject $output_runreport -FilePath ".\AppScan_Security_Report - $env:GITHUB_SHA.html"
   
 }
 #policies options are 'All' or 'None'
