@@ -11,8 +11,8 @@ ls -l
 
 #INITIALIZING VARIABLES
 $global:BearerToken = ""
-$global:scan_name = ""
-if($env:INPUT_scan_name -eq ""){
+$global:scan_name = ''
+if([string]::IsNullOrEmpty($env:INPUT_scan_name)){
   $global:scan_name = "$env:GITHUB_REPOSITORY $env:GITHUB_SHA"
 }else{
   $global:scan_name = "$env:INPUT_scan_name"
