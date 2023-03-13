@@ -22,7 +22,7 @@ function Login-ASoC {
   if($global:BearerToken -ne ""){
     Write-Host "Login successful"
   }else{
-    Write-Host "Login failed, bearer token is empty... exiting"
+    Write-Host "Login failed... exiting"
     exit 1
   }
   

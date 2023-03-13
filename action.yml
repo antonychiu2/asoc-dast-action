@@ -162,4 +162,4 @@ runs:
       name: Upload HCL AppScan HTML Report to Github Artifacts
       with:
         name: AppScan Security Scan HTML Report 
-        path: /*.html
+        path: '**/*.html'
