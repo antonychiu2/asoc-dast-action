@@ -1,5 +1,5 @@
-name: test-powershell-action
-description: 'test description'
+name: asoc-dast-action
+description: 'Scan for security issues in web applications'
 branding:
   icon: check-circle
   color: blue
