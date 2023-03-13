@@ -1,3 +1,4 @@
 *.html
 testMain.ps1
 testResultProcessor.ps1
+*.pdf
