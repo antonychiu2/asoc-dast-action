@@ -28,7 +28,7 @@ If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://
 | scan_type | The type of the scan | staging | staging, production |
 | dynamic_scan_type | Choose between dast or upload. DAST will require you to specify starting URL and login, while upload will only require you to specify a .scan or .scant file | dast | dast, upload |
 | scan_or_scant_file |(applicable only if dynamic_scan_type = upload) Provide the path to the .scan or .scant file here| |  |
-| starting_URL|(applicable only if dynamic_scan_type = dast)The starting URL of the DAST scan|||
+| starting_URL|(applicable only if dynamic_scan_type = dast)The starting URL of the DAST scan|https://demo.testfire.net?mode=demo|text|
 |optimization|Level of test optimization|Fast|NoOptimization, Fast, Faster, Fastest|
 |network|Set the type of network, if this is set to private, you must have AppScan Presence created in advance|public|public, private|
 |presence_id|(applicable only if network = private)|||
