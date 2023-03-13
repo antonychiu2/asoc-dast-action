@@ -7,6 +7,7 @@ inputs:
   baseurl:
     description: 'baseURL of ASOC API'
     required: true
+    default: 'https://cloud.appscan.com'
   asoc_key:
     description: 'API key for connecting to ASoC.'
     required: true
@@ -38,6 +39,7 @@ inputs:
   starting_URL:
     description: 'The starting URL of the DAST scan'
     required: false
+    default: https://demo.testfire.net?mode=demo
   login_method:
     description: 'Login Method of the scan, can be none, userpass, or recorded'
     required: false
@@ -45,15 +47,15 @@ inputs:
   optimization:
     description: 'Optimization level: NoOptimization, Fast, Faster, Fastest'
     required: false
-    default: NoOptimization
+    default: Fast
   
   #NETWORK
   network:
-    description: 'public or private network'
+    description: 'Set the type of network, if this is set to private, you must have AppScan Presence created in advance'
     required: false
     default: 'public'
   presence_id:
-    description: 'if network is set to private, provide the AppScan Presence ID'
+    description: 'Provide the appscan presence ID here'
     required: false
   
   #BASIC LOGIN
@@ -63,9 +65,9 @@ inputs:
   login_password:
     description: 'if login_method is userpass, provide the password here'
     required: false
-  login_extra_field:
-    description: 'if login_method is userpass, provide optional 3rd login value'
-    required: false
+  #login_extra_field:
+  #  description: 'if login_method is userpass, provide optional 3rd login value'
+  #  required: false
 
   #RECORDEDLOGIN
   login_sequence_file:
@@ -74,7 +76,7 @@ inputs:
     
   #misc settings
   email_notification:
-    description: 'send email notification on scan completion'
+    description: 'Send email notification uponn scan completion'
     required: false
     default: 'false'
 
@@ -82,10 +84,10 @@ inputs:
     description: 'set to personal scan'
     required: false
     default: 'false'
-  intervention:
-    description: 'allow scan intervention'
-    required: false
-    default: 'false'
+  #intervention:
+  #  description: 'allow scan intervention'
+  #  required: false
+  #  default: 'false'
 
   #Wait for analysis settings
   wait_for_analysis:
@@ -94,13 +96,13 @@ inputs:
     default: 'true'
 
   wait_for_analysis_timeout_minutes:
-    description: 'maximum duration in seconds before the job will no longer wait and proceeds to complete, default is 360 (6 hours)'
+    description: 'maximum duration in minutes before the job will no longer wait and proceeds to complete, default is 360 (6 hours)'
     required: false
     default: '360'
   
   #fail build settings
   fail_for_noncompliance:
-    description: 'If wait_for_analysis is true, fail the job if any non-compliant issues are found in the scan'
+    description: 'If fail_for_noncompliance is true, fail the job if any non-compliant issues are found in the scan'
     required: false
     default: 'false'
   fail_by_severity:
