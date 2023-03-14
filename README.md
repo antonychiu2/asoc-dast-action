@@ -56,7 +56,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run ASoC DAST Scan
-        uses: antonychiu2/asoc-dast-action@v1.0.1
+        uses: antonychiu2/asoc-dast-action@v1.0.2
         with:
           baseurl:  https://cloud.appscan.com
           asoc_key: ${{secrets.ASOC_KEY}}
@@ -85,7 +85,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run ASoC DAST Scan
-        uses: antonychiu2/asoc-dast-action@v1.0.1
+        uses: antonychiu2/asoc-dast-action@v1.0.2
         with:
           baseurl:  https://cloud.appscan.com
           asoc_key: ${{secrets.ASOC_KEY}}

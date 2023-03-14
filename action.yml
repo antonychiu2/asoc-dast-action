@@ -1,4 +1,4 @@
-name: AppScan On Cloud DAST
+name: HCL AppScan Dynamic Analyzer
 description: 'Scan for security issues in web applications'
 branding:
   icon: check-circle
@@ -47,7 +47,7 @@ inputs:
   optimization:
     description: 'Optimization level: NoOptimization, Fast, Faster, Fastest'
     required: false
-    default: Fast
+    default: Fastest
   
   #NETWORK
   network:
@@ -91,7 +91,7 @@ inputs:
 
   #Wait for analysis settings
   wait_for_analysis:
-    description: 'wait for analysis to complete before finishing job'
+    description: 'Set this true to wait for analysis to complete before finishing job.'
     required: true
     default: 'true'
 
@@ -102,15 +102,15 @@ inputs:
   
   #fail build settings
   fail_for_noncompliance:
-    description: 'If fail_for_noncompliance is true, fail the job if any non-compliant issues are found in the scan'
+    description: 'If **fail_for_noncompliance** = true, fail the job if any non-compliant issues are found in the scan'
     required: false
     default: 'false'
   fail_by_severity:
-    description: 'If fail_by_severity is set to true, failure_threshold must also be set. This will fail the job if any issues equal to or higher (more severe) than failure_threshold are found in the scan.'
+    description: 'If **fail_by_severity** is set to true, failure_threshold must also be set. This will fail the job if any issues equal to or higher (more severe) than failure_threshold are found in the scan.'
     required: false
     default: 'false'
   failure_threshold:
-    description: 'If fail_for_noncompliance is enabled, the severity that indicates a failure. Lesser severities will not be considered a failure. For example, if failure_threshold is set to Medium, Informational and/or Low severity issues will not cause a failure. Medium, High, and/or Critical issues will cause a failure.	'
+    description: 'If **fail_for_noncompliance** is enabled, the severity that indicates a failure. Lesser severities will not be considered a failure. For example, if failure_threshold is set to Medium, Informational and/or Low severity issues will not cause a failure. Medium, High, and/or Critical issues will cause a failure.	'
     required: false
     default: 'High'
 

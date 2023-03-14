@@ -219,6 +219,7 @@ function Run-ASoC-GenerateReport ($scanID) {
       'Title' = "$global:scan_name"
       'Locale' = "en-US"
       'Notes' = "Github SHA: $env:GITHUB_SHA"
+      'Comments' = "true"
     }
   }
   #DEBUG
