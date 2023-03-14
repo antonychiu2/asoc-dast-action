@@ -356,3 +356,65 @@ function Get-SeverityValue($severityText){
   return $severityValue
 
 }
+
+function Run-ASoC-GetAllIssuesFromScan($scanId){
+
+  #Download Report
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Issues/Scan/$scanId"+"?applyPolicies=None&%24inlinecount=allpages"
+    Method      = 'Get'
+    Headers = @{
+      'Accept' = 'text/html'
+      Authorization = "Bearer $global:BearerToken"
+    }
+  }
+  #DEBUG
+  Write-Host $params
+
+  $jsonIssues = Invoke-RestMethod @params
+  return $jsonIssues
+}
+
+function Run-ASoC-SetCommentForIssue($issueId,$inputComment){
+  #Download Report
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Issues/$issueId"
+    Method      = 'Put'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  $jsonBody =@{
+    Comment = $inputComment
+  }
+  #DEBUG
+  Write-Host $params
+
+  $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
+  return $jsonOutput
+}
+
+#DELETE
+function Run-ASoC-SetBatchComments($scanId, $inputComment){
+  
+
+  #https://cloud.appscan.com/api/v2/Issues/Scan/9d989c39-70bf-ed11-ba76-14cb65723612?odataFilter=test&applyPolicies=None
+
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Issues/Scan/$issueId"+"applyPolicies=None"
+    Method      = 'Put'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  $jsonBody =@{
+    Comment = $inputComment
+  }
+  #DEBUG
+  Write-Host $params
+
+  $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
+  return $jsonOutput
+}

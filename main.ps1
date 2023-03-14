@@ -21,6 +21,9 @@ $global:jsonBodyInPSObject = ""
 $global:scanId
 $global:BaseAPIUrl = ""
 $global:BaseAPIUrl = $env:INPUT_baseurl + "/api/V2"
+$global:GithubRunURL = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+Write-Host "Gitub Run URL: $global:GithubRunURL"
+#${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 #INITIALIZE
 #Construct base JSON Body for DAST Scan for API DynamicAnalyzer and DynamicAnalyzerWithFiles
@@ -58,11 +61,20 @@ $scanOverviewPage = $env:INPUT_baseurl + "/main/myapps/" + $env:INPUT_applicatio
 Write-Host "Scan is initiated and can be viewed in ASoC Scan Dashboard:" 
 Write-Host $scanOverviewPage -ForegroundColor Green
 
-#If wait_for_analysis is set to true, we proceed to wait before generating report
+#If wait_for_analysis is set to true, we proceed to wait for scan completion, then performs report generation
 if($env:INPUT_wait_for_analysis){
 
   #Check for report completion
   Run-ASoC-ScanCompletionChecker ($global:scanId)
+
+  #Update comment on ASoC issues
+  $issueJson = Run-ASoC-GetAllIssuesFromScan($global:scanId)
+  $issueItems = $issueJson.Items
+  foreach($i in $issueItems){
+    $issueId = $i.Id
+    Write-Host "Issue ID: $issueId"
+    Run-ASoC-SetCommentForIssue $issueId "Issue found during Scan from Github SHA: $env:GITHUB_SHA, URL: $global:GithubRunURL"
+  }
 
   #Send for report generation
   $reportID = Run-ASoC-GenerateReport ($global:scanId)
@@ -110,6 +122,10 @@ if($env:INPUT_wait_for_analysis){
     else{
         Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_failure_threshold." -ForegroundColor Green
     }
+
+
+
+
   }
 }else{
   write-host "Since wait_for_analysis is set to false, the job is now complete. Exiting..."
