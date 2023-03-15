@@ -171,10 +171,10 @@ runs:
     - name: Job Canceled Step
       run: |
         ${{ github.action_path }}/cancelJob.ps1
-      if: ${{ cancelled() }}
+      if: cancelled() 
       shell: pwsh
 
     - name: Always Run Step
       run: Write-Host "Always Run step"
-      if: ${{ always() }}
+      if: always()
       shell: pwsh

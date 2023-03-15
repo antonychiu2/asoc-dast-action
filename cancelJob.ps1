@@ -7,3 +7,5 @@
 
 dir env:
 write-host "$env:scanId"
+
+function Delete-LatestRunningScanExecution($env:scanId){
