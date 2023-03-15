@@ -117,7 +117,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: |
+    - name: ASoC DAST Step
+      run: |
         # $env:INPUT_TEST = "${{ inputs.TEST }}"
         $env:INPUT_baseurl = "${{ inputs.baseurl }}"
         $env:INPUT_asoc_key = "${{inputs.asoc_key}}"
@@ -160,13 +161,14 @@ runs:
         ${{ github.action_path }}/asoc.ps1
         ${{ github.action_path }}/main.ps1
       shell: pwsh
-      name: ASoC DAST Step
-    - uses: actions/upload-artifact@v3
-      name: Upload HCL AppScan HTML Report to Github Artifacts
+      
+    - name: Upload HCL AppScan HTML Report to Github Artifacts
+      uses: actions/upload-artifact@v3
       with:
         name: AppScan Security Scan HTML Report 
         path: '**/AppScan*.html'
+
     - name: Job Canceled Step
-      if: ${{ always() }}
+      if: ${{ cancelled() }}
       run: Write-Host "Always Run Step"
       shell: pwsh
