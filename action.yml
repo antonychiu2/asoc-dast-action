@@ -157,7 +157,7 @@ runs:
 
         $env:INPUT_fail_by_severity = "${{ inputs.fail_by_severity }}"
         $env:INPUT_failure_threshold = "${{ inputs.failure_threshold }}"
-        
+        $env:scanId = ""
         ${{ github.action_path }}/asoc.ps1
         ${{ github.action_path }}/main.ps1
       shell: pwsh
@@ -169,15 +169,12 @@ runs:
         path: '**/AppScan*.html'
 
     - name: Job Canceled Step
-      if: ${{ cancelled() }}
       run: |
-        Write-Host "Run during cancel step"
-        Write-Host "$global:scanId"
-        Write-Host "$env:scanId"
-        dir env:
+        ${{ github.action_path }}/cancelJob.ps1
+      if: ${{ cancelled() }}
       shell: pwsh
 
     - name: Always Run Step
-      if: ${{ always() }}
       run: Write-Host "Always Run step"
+      if: ${{ always() }}
       shell: pwsh
