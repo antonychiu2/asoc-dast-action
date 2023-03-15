@@ -18,7 +18,8 @@ if([string]::IsNullOrEmpty($env:INPUT_scan_name)){
   $global:scan_name = "$env:INPUT_scan_name"
 }
 $global:jsonBodyInPSObject = ""
-$global:scanId
+$global:scanId = ""
+$env:scanId = ""
 $global:BaseAPIUrl = ""
 $global:BaseAPIUrl = $env:INPUT_baseurl + "/api/V2"
 $global:GithubRunURL = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
@@ -55,6 +56,7 @@ Set-AppScanPresence
 
 #Run DAST Scan
 $global:scanId = Run-ASoC-DAST
+$env:scanId = $global:scanId
 
 #Display ASoC Scan URL
 $scanOverviewPage = $env:INPUT_baseurl + "/main/myapps/" + $env:INPUT_application_id + "/scans/" + $global:scanId

@@ -173,6 +173,8 @@ runs:
       run: |
         Write-Host "Run during cancel step"
         Write-Host "$global:scanId"
+        Write-Host "$env:scanId"
+        dir env:
       shell: pwsh
 
     - name: Always Run Step
