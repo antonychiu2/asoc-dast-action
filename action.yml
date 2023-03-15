@@ -170,5 +170,12 @@ runs:
 
     - name: Job Canceled Step
       if: ${{ cancelled() }}
-      run: Write-Host "Always Run Step"
+      run: |
+        Write-Host "Run during cancel step"
+        Write-Host "$global:scanId"
+      shell: pwsh
+
+    - name: Always Run Step
+      if: ${{ always() }}
+      run: Write-Host "Always Run step"
       shell: pwsh

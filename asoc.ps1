@@ -2,7 +2,7 @@ Write-Host "Loading Library functions from asoc.ps1"
 #FUNCTIONS
 function Login-ASoC {
 
-  $jsonBodyInPSObject = @{
+  $jsonBody = @{
     KeyId         = $env:INPUT_asoc_key
     KeySecret     = $env:INPUT_asoc_secret
   }
@@ -10,11 +10,14 @@ function Login-ASoC {
   $params = @{
       Uri         = "$global:BaseAPIUrl/Account/ApiKeyLogin"
       Method      = 'POST'
-      Body        = $jsonBodyInPSObject | ConvertTo-Json
+      Body        = $jsonBody | ConvertTo-Json
       Headers = @{
           'Content-Type' = 'application/json'
+          'accept' = 'application/json'
         }
       }
+  Write-Debug $params
+
   $Members = Invoke-RestMethod @params
   #Write-Host "Auth successful - Token received: $Members.token"
   $global:BearerToken = $Members.token
@@ -418,4 +421,70 @@ function Run-ASoC-SetBatchComments($scanId, $inputComment){
 
   $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
   return $jsonOutput
+}
+function Run-ASoC-GetScanDetails($scanId){
+  
+  #$latestScanExecutionId = ''
+
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Scans/$scanId"
+    Method      = 'Get'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  #DEBUG
+  Write-Debug $params
+
+  $jsonOutput = Invoke-RestMethod @params
+  #$latestScanExecutionId = $jsonOutput.LatestExecution.Id
+  return $jsonOutput
+
+}
+
+
+function Run-ASoC-CancelScanExecution($executionId){
+
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Scans/Execution/$executionId/"
+    Method      = 'DELETE'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  #DEBUG
+  Write-Debug $params
+
+  $jsonOutput = Invoke-WebRequest @params
+  Write-Debug $jsonOutput
+  return $jsonOutput
+}
+
+function Delete-LatestRunningScanExecution($scanId){
+
+  $ExecutionId = ''
+  $ExecutionProgress = ''
+
+  $scanDetailJson = Run-ASoC-GetScanDetails($scanId)
+
+  $ExecutionId = $scanDetailJson.LatestExecution.Id
+  $ExecutionProgress = $scanDetailJson.LatestExecution.ExecutionProgress
+
+  if($ExecutionProgress -ne 'Completed'){
+
+    $cancelStatus = Run-ASoC-CancelScanExecution($ExecutionId)
+    Write-Debug $cancelStatus
+    
+    if($cancelStatus.StatusCode -In 200..299){
+      Write-Host "Latest Scan Execution with Execution ID: $ExecutionId successfully canceled."
+    }else{
+      Write-Host "Cancellation of Scan with Execution ID: $executionId unsuccessful. See debug output:"
+      Write-Host $cancelStatus
+    }
+
+  }else{
+    Write-Host "Latest scan execution ID: $ExecutionId is already completed and not occupying a scan queue."
+  }
 }

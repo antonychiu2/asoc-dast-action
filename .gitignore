@@ -2,6 +2,7 @@
 testMain.ps1
 testResultProcessor.ps1
 testIssueComment.ps1
+testScanCancelation.ps1
 *.pdf
 tags_to_remove.txt
 *.scan
