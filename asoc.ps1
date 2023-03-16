@@ -22,6 +22,8 @@ function Login-ASoC {
 
 
   $Members = Invoke-RestMethod @params
+  Write-Debug ($Members | Format-Table | Out-String)
+
   #Write-Host "Auth successful - Token received: $Members.token"
   $global:BearerToken = $Members.token
 
