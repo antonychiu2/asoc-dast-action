@@ -97,8 +97,8 @@ if($env:INPUT_WAIT_FOR_ANALYSIS){
   $jsonData = Run-ASoC-GetIssueCount $global:scanId 'None'
 
   #This prints the number of issues by Severity
-  Write-Host ($jsonData | Format-Table | Out-String)
-
+  #Write-Host ($jsonData | Format-Table | Out-String)
+  $jsonData
     
   #Fail the build if fail_for_noncompliance is true and scan results in exceeding the threshold set in fail_threshold
   if($env:INPUT_FAIL_FOR_NONCOMPLIANCE -eq $true){

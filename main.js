@@ -13,7 +13,7 @@ child.stdout.on("data",function(data){
 });
 child.stderr.on("data",function(data){
     process.stdout.write("Powershell Errors: " + data);
-    core.error("Errors: " + data);
+    core.error("" + data);
 
     process.exit(1);
 });
