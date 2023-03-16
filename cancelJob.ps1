@@ -9,5 +9,5 @@ $scanidFileName = ".\scanid.txt"
 dir env:
 $global:scanId = Get-Content $scanidFileName | Select -First 1
 Write-Host "ScanID: $global:scanId"
-function Delete-LatestRunningScanExecution($env:scanId){
-}
+
+Delete-LatestRunningScanExecution($global:scanId)
