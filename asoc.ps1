@@ -16,7 +16,10 @@ function Login-ASoC {
           'accept' = 'application/json'
         }
       }
-  Write-Debug $params
+  #DEBUG
+  Write-Debug ($jsonBody | Format-Table | Out-String)
+  Write-Debug ($params | Format-Table | Out-String)
+
 
   $Members = Invoke-RestMethod @params
   #Write-Host "Auth successful - Token received: $Members.token"
