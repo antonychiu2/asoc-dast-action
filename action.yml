@@ -115,66 +115,7 @@ inputs:
     default: 'High'
 
 runs:
-  using: "composite"
-  steps:
-    - name: ASoC DAST Step
-      run: |
-        # $env:INPUT_TEST = "${{ inputs.TEST }}"
-        $env:INPUT_baseurl = "${{ inputs.baseurl }}"
-        $env:INPUT_asoc_key = "${{inputs.asoc_key}}"
-        $env:INPUT_asoc_secret = "${{inputs.asoc_secret}}"
-        $env:INPUT_application_id = "${{inputs.application_id}}"
-        $env:INPUT_scan_name = "${{ inputs.scan_name }}"
-        $env:INPUT_scan_type = "${{ inputs.scan_type }}"
-        $env:INPUT_starting_URL = "${{ inputs.starting_URL }}"
-        $env:INPUT_login_method = "${{ inputs.login_method }}"
-        $env:INPUT_optimization = "${{ inputs.optimization }}"
-
-        #DAST or SCAN File
-        $env:INPUT_dynamic_scan_type = "${{ inputs.dynamic_scan_type }}"
-        $env:INPUT_scan_or_scant_file = "${{ inputs.scan_or_scant_file }}"
-
-        #NETWORK
-        $env:INPUT_network = "${{ inputs.network }}"
-        $env:INPUT_presence_id = "${{ inputs.presence_id }}"
-
-        #BASICAUTH
-        $env:INPUT_login_user = "${{ inputs.login_user }}"
-        $env:INPUT_login_password = "${{ inputs.login_password }}"
-        $env:INPUT_login_extra_field = "${{ inputs.login_extra_field }}"
-
-        #RECORDEDLOGIN
-        $env:INPUT_login_sequence_file = "${{ inputs.login_sequence_file }}"
-
-        #MISC
-        $env:INPUT_email_notification = "${{ inputs.email_notification }}"
-        $env:INPUT_personal_scan = "${{ inputs.personal_scan }}"
-        $env:INPUT_intervention = "${{ inputs.intervention }}"
-
-        $env:INPUT_wait_for_analysis = "${{ inputs.wait_for_analysis }}"
-        $env:INPUT_wait_for_analysis_timeout_minutes = "${{ inputs.wait_for_analysis_timeout_minutes }}"
-        $env:INPUT_fail_for_noncompliance = "${{ inputs.fail_for_noncompliance }}"
-
-        $env:INPUT_fail_by_severity = "${{ inputs.fail_by_severity }}"
-        $env:INPUT_failure_threshold = "${{ inputs.failure_threshold }}"
-        $env:scanId = ""
-        ${{ github.action_path }}/asoc.ps1
-        ${{ github.action_path }}/main.ps1
-      shell: pwsh
-      
-    - name: Upload HCL AppScan HTML Report to Github Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: AppScan Security Scan HTML Report 
-        path: '**/AppScan*.html'
-
-    - name: Job Canceled Step
-      run: |
-        ${{ github.action_path }}/cancelJob.ps1
-      if: cancelled() 
-      shell: pwsh
-
-    - name: Always Run Step
-      run: Write-Host "Always Run step"
-      if: always()
-      shell: pwsh
+  using: 'node16'
+  main: 'main.js'
+  post: 'cancelJob.js'
+  post-if: cancelled()
