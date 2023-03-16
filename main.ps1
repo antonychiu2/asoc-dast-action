@@ -26,6 +26,8 @@ $global:BaseAPIUrl = $env:INPUT_BASEURL + "/api/V2"
 Write-Debug $global:BaseAPIUrl
 $global:GithubRunURL = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
 Write-Host "Gitub Run URL: $global:GithubRunURL"
+$scanidFileName = ".\scanid.txt"
+
 #${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 #INITIALIZE
@@ -58,7 +60,9 @@ Set-AppScanPresence
 
 #Run DAST Scan
 $global:scanId = Run-ASoC-DAST
-$env:scanId = $global:scanId
+
+#Save Scan ID in a file
+$global:scanId | Out-File -FilePath $scanidFileName -Force
 
 #Display ASoC Scan URL
 $scanOverviewPage = $env:INPUT_BASEURL + "/main/myapps/" + $env:INPUT_APPLICATION_ID + "/scans/" + $global:scanId

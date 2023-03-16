@@ -4,8 +4,10 @@
 
 #LOAD ALL ASOC FUNCTIONS FROM LIBRARY FILE asoc.ps1
 . "$env:GITHUB_ACTION_PATH/asoc.ps1"
+$scanidFileName = ".\scanid.txt"
 
 dir env:
-write-host "$env:scanId"
-
+$global:scanId = Get-Content $scanidFileName | Select -First 1
+Write-Host "ScanID: $global:scanId"
 function Delete-LatestRunningScanExecution($env:scanId){
+}
