@@ -3,8 +3,8 @@ Write-Host "Loading Library functions from asoc.ps1"
 function Login-ASoC {
 
   $jsonBody = @{
-    KeyId         = $env:INPUT_asoc_key
-    KeySecret     = $env:INPUT_asoc_secret
+    KeyId         = $env:INPUT_ASOC_KEY
+    KeySecret     = $env:INPUT_ASOC_SECRET
   }
 
   $params = @{
