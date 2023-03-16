@@ -1,3 +1,5 @@
+const core =require('@actions/core');
+
 console.log(process.env)
 var PSFileToRun = "main.ps1";
 process.env['GITHUB_ACTION_PATH'] = process.env.HOME+"/work/_actions/"+process.env.GITHUB_ACTION_REPOSITORY+"/"+process.env.GITHUB_ACTION_REF;
@@ -11,6 +13,8 @@ child.stdout.on("data",function(data){
 });
 child.stderr.on("data",function(data){
     process.stdout.write("Powershell Errors: " + data);
+    core.error("Errors: " + data);
+
     process.exit(1);
 });
 child.on("exit",function(){
