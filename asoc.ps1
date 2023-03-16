@@ -398,7 +398,7 @@ function Run-ASoC-SetCommentForIssue($issueId,$inputComment){
     Comment = $inputComment
   }
   #DEBUG
-  Write-Debug ($params | Format-Table | Out-String)
+  #Write-Debug ($params | Format-Table | Out-String)
 
   $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
   return $jsonOutput
