@@ -13,10 +13,10 @@ ls -l
 #INITIALIZING VARIABLES
 $global:BearerToken = ""
 $global:scan_name = ''
-if([string]::IsNullOrEmpty($env:INPUT_scan_name)){
+if([string]::IsNullOrEmpty($env:INPUT_SCAN_NAME)){
   $global:scan_name = "$env:GITHUB_REPOSITORY $env:GITHUB_SHA"
 }else{
-  $global:scan_name = "$env:INPUT_scan_name"
+  $global:scan_name = "$env:INPUT_SCAN_NAME"
 }
 $global:jsonBodyInPSObject = ""
 $global:scanId = ""
@@ -31,21 +31,21 @@ Write-Host "Gitub Run URL: $global:GithubRunURL"
 #INITIALIZE
 #Construct base JSON Body for DAST Scan for API DynamicAnalyzer and DynamicAnalyzerWithFiles
 $global:jsonBodyInPSObject = @{
-  ScanType = $env:INPUT_scan_type
+  ScanType = $env:INPUT_SCAN_TYPE
   IncludeVerifiedDomains = $true
-  StartingUrl = $env:INPUT_starting_URL
-  TestOptimizationLevel = $env:INPUT_optimization
+  StartingUrl = $env:INPUT_STARTING_URL
+  TestOptimizationLevel = $env:INPUT_OPTIMIZATION
   UseAutomaticTimeout = $true
   MaxRequestsIn = 10
   MaxRequestsTimeFrame = 1000
   OnlyFullResults = $true
   FullyAutomatic = $true
   ScanName = $global:scan_name
-  EnableMailNotification = $env:INPUT_email_notification
+  EnableMailNotification = $env:INPUT_EMAIL_NOTIFICATION
   Locale = 'en-US'
-  AppId = $env:INPUT_application_id
+  AppId = $env:INPUT_APPLICATION_ID
   Execute = $true
-  Personal = $env:INPUT_personal_scan
+  Personal = $env:INPUT_PERSONAL_SCAN
 }
 
 #LOAD ALL ASOC FUNCTIONS FROM LIBRARY FILE asoc.ps1
@@ -61,12 +61,12 @@ $global:scanId = Run-ASoC-DAST
 $env:scanId = $global:scanId
 
 #Display ASoC Scan URL
-$scanOverviewPage = $env:INPUT_baseurl + "/main/myapps/" + $env:INPUT_application_id + "/scans/" + $global:scanId
+$scanOverviewPage = $env:INPUT_BASEURL + "/main/myapps/" + $env:INPUT_APPLICATION_ID + "/scans/" + $global:scanId
 Write-Host "Scan is initiated and can be viewed in ASoC Scan Dashboard:" 
 Write-Host $scanOverviewPage -ForegroundColor Green
 
 #If wait_for_analysis is set to true, we proceed to wait for scan completion, then performs report generation
-if($env:INPUT_wait_for_analysis){
+if($env:INPUT_WAIT_FOR_ANALYSIS){
 
   #Check for report completion
   Run-ASoC-ScanCompletionChecker ($global:scanId)
@@ -91,11 +91,13 @@ if($env:INPUT_wait_for_analysis){
   
   #issues found in scan
   $jsonData = Run-ASoC-GetIssueCount $global:scanId 'None'
-  $jsonData
+
+  #This prints the number of issues by Severity
+  Write-Host ($jsonData | Format-Table | Out-String)
 
     
   #Fail the build if fail_for_noncompliance is true and scan results in exceeding the threshold set in fail_threshold
-  if($env:INPUT_fail_for_noncompliance -eq $true){
+  if($env:INPUT_FAIL_FOR_NONCOMPLIANCE -eq $true){
 
     $jsonData = Run-ASoC-GetIssueCount $global:scanId 'All'
     #$jsonData
@@ -112,19 +114,19 @@ if($env:INPUT_wait_for_analysis){
   }
 
   #Fail the build if fail_by_severity is true and scan results in non-compliance
-  if($env:INPUT_fail_by_severity -eq $true){
+  if($env:INPUT_FAIL_BY_SEVERITY -eq $true){
     $jsonData = Run-ASoC-GetIssueCount $global:scanId 'None'
     #$jsonData
     $failBuild = $false
-    $failBuild = FailBuild-BySeverity $jsonData $env:INPUT_failure_threshold
+    $failBuild = FailBuild-BySeverity $jsonData $env:INPUT_FAILURE_THRESHOLD
     Write-Host $failBuild 
 
     if($failBuild -eq $true){
-        Write-Error "Job failed - Scan has found security issues equal to or above the threshold set: $env:INPUT_failure_threshold"
+        Write-Error "Job failed - Scan has found security issues equal to or above the threshold set: $env:INPUT_FAILURE_THRESHOLD"
         exit 1
     }
     else{
-        Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_failure_threshold." -ForegroundColor Green
+        Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_FAILURE_THRESHOLD." -ForegroundColor Green
     }
 
 

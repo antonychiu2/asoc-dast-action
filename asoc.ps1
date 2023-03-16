@@ -38,12 +38,12 @@ function Login-ASoC {
 
 function Set-AppScanPresence{
 
-  if($env:INPUT_network -eq 'private'){
+  if($env:INPUT_NETWORK -eq 'private'){
     
-    $global:jsonBodyInPSObject.Add("PresenceId",$env:INPUT_presence_id)
+    $global:jsonBodyInPSObject.Add("PresenceId",$env:INPUT_PRESENCE_ID)
 <# 
     $global:jsonBodyInPSObject =+ @{
-      PresenceId = $env:INPUT_presence_id
+      PresenceId = $env:INPUT_PRESENCE_ID
     } #> 
   }
 }
@@ -51,7 +51,7 @@ function Set-AppScanPresence{
 function Lookup-ASoC-Application ($ApplicationName) {
 
   $params = @{
-      Uri         = "$env:INPUT_baseurl/Apps/GetAsPage"
+      Uri         = "$env:INPUT_BASEURL/Apps/GetAsPage"
       Method      = 'GET'
       Headers = @{
           'Content-Type' = 'application/json'
@@ -93,8 +93,8 @@ function Run-ASoC-DynamicAnalyzerNoAuth {
 function Run-ASoC-DynamicAnalyzerUserPass{
   Write-Host "Proceeding with username and password login..." -ForegroundColor Green
 
-  $global:jsonBodyInPSObject.Add("LoginUser",$env:INPUT_login_user)
-  $global:jsonBodyInPSObject.Add("LoginPassword",$env:INPUT_login_password)
+  $global:jsonBodyInPSObject.Add("LoginUser",$env:INPUT_LOGIN_USER)
+  $global:jsonBodyInPSObject.Add("LoginPassword",$env:INPUT_LOGIN_PASSWORD)
 
   return Run-ASoC-DynamicAnalyzerAPI($jsonBodyInPSObject | ConvertTo-Json)
 }
@@ -103,7 +103,7 @@ function Run-ASoC-DynamicAnalyzerRecordedLogin{
 
   Write-Host "Proceeding with recorded Login..." -ForegroundColor Green
   #Upload Recorded Login File
-  $FileID = Run-ASoC-FileUpload($env:INPUT_login_sequence_file)
+  $FileID = Run-ASoC-FileUpload($env:INPUT_LOGIN_SEQUENCE_FILE)
   $global:jsonBodyInPSObject.Add("LoginSequenceFileId",$FileID)
   return Run-ASoC-DynamicAnalyzerAPI($jsonBodyInPSObject | ConvertTo-Json)
 }
@@ -111,7 +111,7 @@ function Run-ASoC-DynamicAnalyzerRecordedLogin{
 
 function Run-ASoC-DynamicAnalyzerWithFile{
 
-  $FileID = Run-ASoC-FileUpload($env:INPUT_scan_or_scant_file)
+  $FileID = Run-ASoC-FileUpload($env:INPUT_SCAN_OR_SCANT_FILE)
   $global:jsonBodyInPSObject.Add("ScanFileId",$FileID)
 
   return Run-ASoC-DynamicAnalyzerWithFileAPI($jsonBodyInPSObject | ConvertTo-Json)
@@ -132,7 +132,7 @@ function Run-ASoC-DynamicAnalyzerAPI($json){
     }
 
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
   
   $Members = Invoke-RestMethod @params
   return $Members.Id
@@ -140,7 +140,7 @@ function Run-ASoC-DynamicAnalyzerAPI($json){
 
 function Run-ASoC-DynamicAnalyzerWithFileAPI($json){
 
-  write-host $json
+  Write-Debug ($json | Format-Table | Out-String)
   $params = @{
     Uri         = "$global:BaseAPIUrl/Scans/DynamicAnalyzerWithFile"
     Method      = 'POST'
@@ -151,7 +151,7 @@ function Run-ASoC-DynamicAnalyzerWithFileAPI($json){
       }
     }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $Members = Invoke-RestMethod @params
   return $Members.Id
@@ -160,14 +160,14 @@ function Run-ASoC-DynamicAnalyzerWithFileAPI($json){
 function Run-ASoC-DAST{
 
   #FIRST check if dynamic_scan_type is 'upload' or 'dast'
-  if($env:INPUT_dynamic_scan_type -eq 'upload'){
+  if($env:INPUT_DYNAMIC_SCAN_TYPE -eq 'upload'){
     return Run-ASoC-DynamicAnalyzerWithFile
   
   #If dynamic_scan_type is not 'upload' then it is a regular 'dast' scan. We proceed to check if it's a userpass login or recorded login
-  }elseif($env:INPUT_login_method -eq 'userpass'){
+  }elseif($env:INPUT_LOGIN_METHOD -eq 'userpass'){
     return Run-ASoC-DynamicAnalyzerUserPass
 
-  }elseif($env:INPUT_login_method -eq 'recorded'){
+  }elseif($env:INPUT_LOGIN_METHOD -eq 'recorded'){
     return Run-ASoC-DynamicAnalyzerRecordedLogin
 
   }else{
@@ -185,13 +185,13 @@ function Run-ASoC-ScanCompletionChecker($scanID){
     }
   }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $counterTimerInSeconds = 0
   Write-Host "Waiting for Scan Completion..." -NoNewLine
   $waitIntervalInSeconds = 30
 
-  while(($scan_status -ne "Ready") -and ($counterTimerInSeconds -lt $env:INPUT_wait_for_analysis_timeout_minutes*60)){
+  while(($scan_status -ne "Ready") -and ($counterTimerInSeconds -lt $env:INPUT_WAIT_FOR_ANALYSIS_TIMEOUT_MINUTES*60)){
     $output = Invoke-RestMethod @params
     $scan_status = $output.Status
     Start-Sleep -Seconds $waitIntervalInSeconds
@@ -231,8 +231,8 @@ function Run-ASoC-GenerateReport ($scanID) {
     }
   }
   #DEBUG
-  Write-Host $params
-  write-host $body
+  Write-Debug ($params | Format-Table | Out-String)
+  Write-Debug ($body | Format-Table | Out-String)
 
   $output_runreport = Invoke-RestMethod @params -Body ($body|ConvertTo-JSON)
   $report_ID = $output_runreport.Id
@@ -251,7 +251,7 @@ function Run-ASoC-ReportCompletionChecker($reportID){
     }
   }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $report_status ="Not Ready"
   while($report_status -ne "Ready"){
@@ -274,7 +274,7 @@ function Run-ASoC-DownloadReport($eportID){
     }
   }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $output_runreport = Invoke-RestMethod @params
   Out-File -InputObject $output_runreport -FilePath ".\AppScan_Security_Report - $env:GITHUB_SHA.html"
@@ -294,7 +294,7 @@ function Run-ASoC-GetIssueCount($scanID, $policyScope){
   }
   
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $jsonOutput = Invoke-RestMethod @params
 
@@ -378,7 +378,7 @@ function Run-ASoC-GetAllIssuesFromScan($scanId){
     }
   }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $jsonIssues = Invoke-RestMethod @params
   return $jsonIssues
@@ -398,7 +398,7 @@ function Run-ASoC-SetCommentForIssue($issueId,$inputComment){
     Comment = $inputComment
   }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
   return $jsonOutput
@@ -422,7 +422,7 @@ function Run-ASoC-SetBatchComments($scanId, $inputComment){
     Comment = $inputComment
   }
   #DEBUG
-  Write-Host $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
   return $jsonOutput
@@ -440,7 +440,7 @@ function Run-ASoC-GetScanDetails($scanId){
     }
   }
   #DEBUG
-  Write-Debug $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $jsonOutput = Invoke-RestMethod @params
   #$latestScanExecutionId = $jsonOutput.LatestExecution.Id
@@ -460,7 +460,7 @@ function Run-ASoC-CancelScanExecution($executionId){
     }
   }
   #DEBUG
-  Write-Debug $params
+  Write-Debug ($params | Format-Table | Out-String)
 
   $jsonOutput = Invoke-WebRequest @params
   Write-Debug $jsonOutput
