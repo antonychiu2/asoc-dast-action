@@ -119,7 +119,7 @@ if($env:INPUT_WAIT_FOR_ANALYSIS){
     #$jsonData
     $failBuild = $false
     $failBuild = FailBuild-BySeverity $jsonData $env:INPUT_FAILURE_THRESHOLD
-    Write-Host $failBuild 
+    Write-Debug "failbuild value is $failBuild"
 
     if($failBuild -eq $true){
         Write-Error "Job failed - Scan has found security issues equal to or above the threshold set: $env:INPUT_FAILURE_THRESHOLD"
