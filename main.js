@@ -21,9 +21,6 @@ child.stderr.on("data",function(data){
 child.on("exit",function(){
     process.stdout.write("Powershell Script finished");
     //core.warning("Issue Count by Severity: " + process.env.ISSUE_COUNT_BY_SEV);
-    process.stdout.write(`Issue Count by Severity: ${process.env.ISSUE_COUNT_BY_SEV}`);
-    process.stdout.write("Issue Count by Severity2: "+process.env.ISSUE_COUNT_BY_SEV);
-    process.stdout.write(`Issue Count by Severity3: ${process.env.ISSUE_COUNT_BY_SEV}`);
 
 });
 child.stdin.end(); //end input
