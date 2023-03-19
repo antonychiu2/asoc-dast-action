@@ -13,7 +13,7 @@ child.stdout.on("data",function(data){
 
 });
 child.stderr.on("data",function(data){
-    process.stdout.write("Powershell Errors: " + data);
+    process.stdout.write("Errors: " + data);
     core.error("" + data);
 
     process.exit(1);
@@ -21,7 +21,7 @@ child.stderr.on("data",function(data){
 child.on("exit",function(){
     process.stdout.write("Powershell Script finished");
 //    core.warning("Issue Count by Severity: " + process.env.ISSUE_COUNT_BY_SEV);
-    core.warning("Issue Count by Severity: ");
+    process.stdout.write("Issue Count by Severity: ");
 
 });
 child.stdin.end(); //end input
