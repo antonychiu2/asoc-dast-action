@@ -10,16 +10,18 @@ var spawn = require("child_process").spawn,child;
 child = spawn("pwsh",[process.env.GITHUB_ACTION_PATH+"/"+PSFileToRun]);
 child.stdout.on("data",function(data){
     process.stdout.write("" + data);
-    core.notice("Issue Count by Severity: " + process.env.ISSUE_COUNT_BY_SEV);
+
 });
 child.stderr.on("data",function(data){
     process.stdout.write("Powershell Errors: " + data);
     core.error("" + data);
-    core.notice("Issue Count by Severity: " + process.env.ISSUE_COUNT_BY_SEV);
 
     process.exit(1);
 });
 child.on("exit",function(){
     process.stdout.write("Powershell Script finished");
+//    core.warning("Issue Count by Severity: " + process.env.ISSUE_COUNT_BY_SEV);
+    core.warning("Issue Count by Severity: ");
+
 });
 child.stdin.end(); //end input
