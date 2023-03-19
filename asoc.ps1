@@ -189,7 +189,7 @@ function Run-ASoC-ScanCompletionChecker($scanID){
 
   $counterTimerInSeconds = 0
   Write-Host "Waiting for Scan Completion..." -NoNewLine
-  $waitIntervalInSeconds = 30
+  $waitIntervalInSeconds = 15
 
   while(($scan_status -ne "Ready") -and ($counterTimerInSeconds -lt $env:INPUT_WAIT_FOR_ANALYSIS_TIMEOUT_MINUTES*60)){
     $output = Invoke-RestMethod @params
