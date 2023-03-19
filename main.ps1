@@ -80,7 +80,7 @@ if($env:INPUT_WAIT_FOR_ANALYSIS){
   $issueItems = $issueJson.Items
   foreach($i in $issueItems){
     $issueId = $i.Id
-    Write-Host "Issue ID: $issueId"
+    Write-Host "Writing Comments for Issue ID: $issueId"
     Run-ASoC-SetCommentForIssue $issueId "Issue found during Scan from Github SHA: $env:GITHUB_SHA, URL: $global:GithubRunURL"
   }
 
@@ -99,8 +99,9 @@ if($env:INPUT_WAIT_FOR_ANALYSIS){
   #This prints the number of issues by Severity
   #Write-Host ($jsonData | Format-Table | Out-String)
   $jsonData
-  $env:ISSUE_COUNT_BY_SEV = $jsonData
-    
+  $env:ISSUE_COUNT_BY_SEV = $jsonData | Format-Table | Out-String
+  Write-Host $env:ISSUE_COUNT_BY_SEV
+
   #Fail the build if fail_for_noncompliance is true and scan results in exceeding the threshold set in fail_threshold
   if($env:INPUT_FAIL_FOR_NONCOMPLIANCE -eq $true){
 
