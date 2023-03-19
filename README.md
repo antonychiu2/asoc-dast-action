@@ -3,6 +3,22 @@ Your code is better and more secure with HCL AppScan.
 
 The HCL AppScan DAST Github Action enables you to run dynamic analysis security testing (DAST) against your application. The DAST scan identifies security vulnerabilities in your code and stores the results in AppScan on Cloud.
 
+# Features
+## Auto Scan Cancellation
+In the event of a user cancelling an action workflow midway through a DAST scan, this action will also automatically cancel the same scan in AppScan on Cloud, thereby freeing up your scan queues. 
+
+## Issue count by severity
+Issue count are displayed in github workflow overview page
+
+## Auto download of scan result into scan artifacts
+Scan report (.html) is automatically generated and sent to github workflow overview page
+
+## Auto embed of GITHUB SHA in AppScan on cloud
+The Github SHA associated to the action will be embedded in AppScan on Cloud in the following locations:
+- Scan name
+- Issue comment
+- Generated report
+
 # Usage
 ## Register
 If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://cloud.appscan.com/) to generate your API key and API secret.
@@ -70,7 +86,12 @@ jobs:
           network: public
           fail_for_noncompliance: false
           wait_for_analysis: true
-
+      - uses: actions/upload-artifact@v3
+        name: Upload HCL AppScan HTML Report to Github Artifacts
+        with:
+          name: AppScan Security Scan HTML Report 
+          path: '**/AppScan*.html'
+        if: success() || failure()
 ```
 
 # Example 2 - DAST scan using a .scant template file with private network through appscan presence
@@ -98,5 +119,10 @@ jobs:
           presence_id: f185efda-67bf-ed11-ba76-14cb65723612
           fail_for_noncompliance: false
           wait_for_analysis: true
-
+      - uses: actions/upload-artifact@v3
+        name: Upload HCL AppScan HTML Report to Github Artifacts
+        with:
+          name: AppScan Security Scan HTML Report 
+          path: '**/AppScan*.html'
+        if: success() || failure()
 ```
