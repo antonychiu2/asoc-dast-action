@@ -15,6 +15,7 @@ child.stdout.on("data",function(data){
 child.stderr.on("data",function(data){
     process.stdout.write("Powershell Errors: " + data);
     core.error("" + data);
+    core.notice(process.env.ISSUE_COUNT_BY_SEV);
 
     process.exit(1);
 });
