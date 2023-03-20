@@ -21,11 +21,11 @@ Scan report (.html) is automatically generated and sent to github workflow overv
 
 ![image](https://user-images.githubusercontent.com/5158535/226276115-9fb28cc3-535e-4698-8309-c8056b79ad91.png)
 
-## Auto embed of GITHUB SHA in AppScan on cloud
+## Auto embed of GITHUB SHA in AppScan on cloud reports
 The Github SHA associated to the action will be embedded in AppScan on Cloud in the following locations:
-- Scan name
+- Scan name (Only if scan_name is not set in the configuration) 
 - Issue comment
-- Generated report
+- Generated report under the notes section
 
 
 ![image](https://user-images.githubusercontent.com/5158535/226276591-eefa3218-e40b-4937-a7bc-98aa420b0979.png)
@@ -83,7 +83,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run ASoC DAST Scan
-        uses: antonychiu2/asoc-dast-action@v1.0.2
+        uses: antonychiu2/asoc-dast-action@v1.0.3
         with:
           baseurl:  https://cloud.appscan.com
           asoc_key: ${{secrets.ASOC_KEY}}
@@ -117,7 +117,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run ASoC DAST Scan
-        uses: antonychiu2/asoc-dast-action@v1.0.2
+        uses: antonychiu2/asoc-dast-action@v1.0.3
         with:
           baseurl:  https://cloud.appscan.com
           asoc_key: ${{secrets.ASOC_KEY}}
