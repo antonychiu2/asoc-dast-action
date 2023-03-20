@@ -3,29 +3,31 @@ Your code is better and more secure with HCL AppScan.
 
 The HCL AppScan DAST Github Action enables you to run dynamic analysis security testing (DAST) against your application. The DAST scan identifies security vulnerabilities in your code and stores the results in AppScan on Cloud.
 
-# Features
-## Auto Scan Cancellation
+# Notable Features
+## 1. Auto Scan Cancellation
 In the event of a user cancelling an action workflow midway through a DAST scan, this action will also automatically cancel the same scan in AppScan on Cloud, thereby freeing up your scan queues. 
 
 ![image](https://user-images.githubusercontent.com/5158535/226275969-d25b1a78-cf8a-4303-89c5-b0f17a051602.png)
 
 ![image](https://user-images.githubusercontent.com/5158535/226275988-599c03d6-aac5-4e16-b6a0-22b77ef92d86.png)
 
-## Issue count by severity overview
-Issue count are displayed in github workflow logs
-
-![image](https://user-images.githubusercontent.com/5158535/226276267-81f43cfd-2d46-4d96-b5c3-4432e250d8d8.png)
-
-## Auto download of scan result into scan artifacts
-Scan report (.html) is automatically generated and sent to github workflow overview page
-
-![image](https://user-images.githubusercontent.com/5158535/226276115-9fb28cc3-535e-4698-8309-c8056b79ad91.png)
-
-## Auto embed of GITHUB SHA in AppScan on cloud reports
+## 2. Auto embed of GITHUB SHA in AppScan on cloud reports
 The Github SHA associated to the action will be embedded in AppScan on Cloud in the following locations:
 - Scan name (Only if scan_name is not set in the configuration) 
 - Issue comment
 - Generated report under the notes section
+
+## 3. Issue count by severity overview
+Issue count are displayed in github workflow logs
+
+![image](https://user-images.githubusercontent.com/5158535/226276267-81f43cfd-2d46-4d96-b5c3-4432e250d8d8.png)
+
+## 4. Auto download of scan result into scan artifacts
+Scan report (.html) is automatically generated and sent to github workflow overview page
+
+![image](https://user-images.githubusercontent.com/5158535/226276115-9fb28cc3-535e-4698-8309-c8056b79ad91.png)
+
+
 
 
 ![image](https://user-images.githubusercontent.com/5158535/226276591-eefa3218-e40b-4937-a7bc-98aa420b0979.png)
