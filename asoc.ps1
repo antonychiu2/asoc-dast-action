@@ -483,7 +483,7 @@ function Delete-LatestRunningScanExecution($scanId){
     Write-Debug $cancelStatus
     
     if($cancelStatus.StatusCode -In 200..299){
-      Write-Host "Latest Scan Execution with Execution ID: $ExecutionId successfully canceled."
+      Write-Host "Latest Scan Execution with Execution ID: $ExecutionId is successfully cancelled."
     }else{
       Write-Host "Cancellation of Scan with Execution ID: $executionId unsuccessful. See debug output:"
       Write-Host $cancelStatus
