@@ -2,8 +2,8 @@
 Write-Host "Starting ASoC script"
 
 #DEBUG
-$DebugPreference = 'Continue'
-Write-Warning "Print environment variables:"
+$DebugPreference = 'SilentlyContinue'
+Write-Debug "Print environment variables:"
 Write-Host "github.sha: " $env:GITHUB_SHA
 dir env:
 ls -l

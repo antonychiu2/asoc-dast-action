@@ -493,3 +493,122 @@ function Delete-LatestRunningScanExecution($scanId){
     Write-Host "Latest scan execution ID: $ExecutionId is already completed and not occupying a scan queue."
   }
 }
+
+#Epheremal presence related functions
+function Run-ASoC-CreatePresence($presenceName){
+  
+  #CREATE PRESENCE
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Presences"
+    Method      = 'Post'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  $jsonBody =@{
+    PresenceName = $presenceName
+  }
+  #DEBUG
+  Write-Debug ($params | Format-Table | Out-String)
+
+  $jsonOutput = Invoke-RestMethod @params -Body ($jsonBody|ConvertTo-JSON) 
+  
+  $presenceId = $jsonOutput.Id
+  return $presenceId
+
+
+}
+
+function Run-ASoC-DownloadPresence($presenceId, $OutputFileName, $platform){
+
+  #DOWNLOAD PRESENCE ZIP FILE
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Presences/"+$presenceId+"/DownloadV2?platform="+$platform
+    Method      = 'Post'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  #DEBUG
+  Write-Debug ($params | Format-Table | Out-String)
+
+  $jsonOutput = Invoke-WebRequest @params -OutFile $OutputFileName
+  return $jsonOutput
+}
+
+
+function Run-ASoC-DeletePresence($presenceId){
+
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Presences/"+$presenceId
+    Method      = 'Delete'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  #DEBUG
+  Write-Debug ($params | Format-Table | Out-String)
+
+  try {
+    $response = Invoke-WebRequest @params
+    Write-Host "Successfully deleted presence with ID: $presenceId"
+
+    
+  }
+  catch {
+      Write-Host "Failed to delete presence with ID: $presenceId"
+  
+  }
+  
+}
+
+
+function Run-ASoC-GetPresenceIdGivenPresenceName($presenceName){
+
+  $params = @{
+    Uri         = "$global:BaseAPIUrl/Presences/"
+    Method      = 'Get'
+    Headers = @{
+      Authorization = "Bearer $global:BearerToken"
+      'Content-Type' = 'application/json'
+    }
+  }
+  #DEBUG
+  Write-Debug ($params | Format-Table | Out-String)
+
+  $response = Invoke-RestMethod @params
+
+  foreach($i in $response){
+    if($i.PresenceName -eq $presenceName){
+      return $i.Id
+    }
+  }
+}
+
+function Run-ASoC-CheckPresenceStatus($presenceId){
+
+    #CREATE PRESENCE
+    $params = @{
+      Uri         = "$global:BaseAPIUrl/Presences/"+$presenceId
+      Method      = 'Get'
+      Headers = @{
+        Authorization = "Bearer $global:BearerToken"
+        'Content-Type' = 'application/json'
+      }
+    }
+    #DEBUG
+    Write-Debug ($params | Format-Table | Out-String)
+  
+    $jsonOutput = Invoke-RestMethod @params
+    
+    if($jsonOutput.Status -eq 'Active'){
+      Write-Host "AppScan Presence with ID: $presenceId is in active state. "
+      return $true
+    }else{
+      Write-Host "AppScan Presence with ID:" $presenceId "is NOT in active state. State =" $jsonOutput.Status
+      return $false
+    }
+}
