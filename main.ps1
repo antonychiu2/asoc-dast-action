@@ -1,12 +1,14 @@
 
 Write-Host "Starting ASoC script"
 
-#DEBUG
+#DEBUG - To show DEBUG Messages, set $DebugPreference = 'Continue'
+
+#$DebugPreference = 'Continue'
 $DebugPreference = 'SilentlyContinue'
+
 Write-Debug "Print environment variables:"
 Write-Host "github.sha: " $env:GITHUB_SHA
-dir env:
-ls -l
+#ls -l
 
 #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 
@@ -98,7 +100,7 @@ if($env:INPUT_WAIT_FOR_ANALYSIS){
 
   #This prints the number of issues by Severity
   #Write-Host ($jsonData | Format-Table | Out-String)
-  $jsonData
+  #$jsonData
   $env:ISSUE_COUNT_BY_SEV = $jsonData | Format-Table | Out-String
   Write-Host $env:ISSUE_COUNT_BY_SEV
 

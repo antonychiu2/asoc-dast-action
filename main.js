@@ -1,6 +1,6 @@
 const core =require('@actions/core');
 
-console.log(process.env)
+//console.log(process.env)
 var PSFileToRun = "main.ps1";
 process.env['GITHUB_ACTION_PATH'] = process.env.HOME+"/work/_actions/"+process.env.GITHUB_ACTION_REPOSITORY+"/"+process.env.GITHUB_ACTION_REF;
 
@@ -19,7 +19,7 @@ child.stderr.on("data",function(data){
     process.exit(1);
 });
 child.on("exit",function(){
-    process.stdout.write("Powershell Script finished");
+    process.stdout.write("");
     //core.warning("Issue Count by Severity: " + process.env.ISSUE_COUNT_BY_SEV);
 
 });
