@@ -17,6 +17,9 @@ The Github SHA associated to the action will be embedded in AppScan on Cloud in 
 - Issue comment
 - Generated report under the notes section
 
+![image](https://user-images.githubusercontent.com/5158535/226276591-eefa3218-e40b-4937-a7bc-98aa420b0979.png)
+
+
 ## 3. Issue count by severity overview
 Issue count are displayed in github workflow logs
 
@@ -30,7 +33,6 @@ Scan report (.html) is automatically generated and sent to github workflow overv
 
 
 
-![image](https://user-images.githubusercontent.com/5158535/226276591-eefa3218-e40b-4937-a7bc-98aa420b0979.png)
 
 # Usage
 ## Register
