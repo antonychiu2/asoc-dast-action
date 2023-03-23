@@ -24,7 +24,6 @@ inputs:
     description: 'The type of scan - staging or production'
     required: false
     default: 'staging'
-
   
   #dast or scan file
   dynamic_scan_type: 
@@ -57,6 +56,10 @@ inputs:
   presence_id:
     description: 'Provide the appscan presence ID here'
     required: false
+  ephemeral_presence:
+    description: 'If set to true, this action will deploy a ephemeral (temporary) instance of the AppScan Presence on the runner. Please take note that this will ignore presence_id and network settings, and will force set wait_for_analysis to true'
+    required: false
+    default: 'false'
   
   #BASIC LOGIN
   login_user:

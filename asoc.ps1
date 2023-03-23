@@ -619,8 +619,15 @@ function Create-EphemeralPresence{
   $presenceName = "Temp instance for Github Action"
   $presenceFileName = 'presence.zip'
   $presenceFolder = 'presence'
-  $platform = 'linux_x64'
-
+  if($IsLinux){
+    $platform = 'linux_x64'
+  }elseif($IsWindow){
+    $platform = 'win_x64'
+  }else{
+    Write-Error "The OS used is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
+    exit 1
+  }
+  
   #DELETE PRESENCE IF PRESENT
   $presenceId = Run-ASoC-GetPresenceIdGivenPresenceName($presenceName)
   Run-ASoC-DeletePresence($presenceId)
@@ -636,8 +643,17 @@ function Create-EphemeralPresence{
   Expand-Archive -Path $presenceFileName -DestinationPath $presenceFolder
 
   #Start The Presence
-  chmod +x "$presenceFolder/startPresenceAsService.sh"
-  & "$presenceFolder/startPresenceAsService.sh" start
+  if($IsLinux){
+    chmod +x "$presenceFolder/startPresenceAsService.sh"
+    & "$presenceFolder/startPresenceAsService.sh" start
+  
+  }elseif($IsWindow){
+    & "$presenceFolder/startPresenceAsService.bat" create
+    & "$presenceFolder/startPresenceAsService.bat" start
+  }else{
+    Write-Error "The OS used is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
+    exit 1
+  }
 
   #Check if presence is up and running
   $presenceStatus = Run-ASoC-CheckPresenceStatus($presenceId)

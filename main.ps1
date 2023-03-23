@@ -57,8 +57,15 @@ $global:jsonBodyInPSObject = @{
 #MAIN
 Login-ASoC
 
-#CHECK NETWORK, if private, then set presence ID
-Set-AppScanPresence
+#if ephemeral_presence is set to true, we will proceed to set our own presence settings and ignore other presence related settings on the YAML
+if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
+  $ephemeralPresenceId = Create-EphemeralPresence
+  $global:jsonBodyInPSObject.Add("PresenceId",$ephemeralPresenceId)
+
+}else{
+  #CHECK NETWORK setting, if private, then set presence ID to the one on the YAML config
+  Set-AppScanPresence
+}
 
 #Run DAST Scan
 $global:scanId = Run-ASoC-DAST
@@ -71,11 +78,21 @@ $scanOverviewPage = $env:INPUT_BASEURL + "/main/myapps/" + $env:INPUT_APPLICATIO
 Write-Host "Scan is initiated and can be viewed in ASoC Scan Dashboard:" 
 Write-Host $scanOverviewPage -ForegroundColor Green
 
-#If wait_for_analysis is set to true, we proceed to wait for scan completion, then performs report generation
-if($env:INPUT_WAIT_FOR_ANALYSIS){
+#IF ephemeral Presence is set, we must force set wait_for_analysis to true regardless of what the user has set. 
+if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
+  $env:INPUT_WAIT_FOR_ANALYSIS = $true
+}
 
-  #Check for report completion
+#If wait_for_analysis is set to true, we proceed to wait for scan completion, then performs report generation
+if($env:INPUT_WAIT_FOR_ANALYSIS -eq $true){
+
+  #Check for scan completion. The process pauses until scan is complete or timeout value has reached
   Run-ASoC-ScanCompletionChecker ($global:scanId)
+
+  #As soon as the scan is complete, we kill the ephemeral presence if one was set
+  if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
+    Run-ASoC-DeletePresence($ephemeralPresenceId)
+  }
 
   #Update comment on ASoC issues
   $issueJson = Run-ASoC-GetAllIssuesFromScan($global:scanId)
@@ -99,12 +116,11 @@ if($env:INPUT_WAIT_FOR_ANALYSIS){
   $jsonData = Run-ASoC-GetIssueCount $global:scanId 'None'
 
   #This prints the number of issues by Severity
-  #Write-Host ($jsonData | Format-Table | Out-String)
-  #$jsonData
   $env:ISSUE_COUNT_BY_SEV = $jsonData | Format-Table | Out-String
   Write-Host $env:ISSUE_COUNT_BY_SEV
 
-  #Fail the build if fail_for_noncompliance is true and scan results in exceeding the threshold set in fail_threshold
+
+  #Fail the build if fail_for_noncompliance is set to true and if scan result count exceeds the threshold set in fail_threshold
   if($env:INPUT_FAIL_FOR_NONCOMPLIANCE -eq $true){
 
     $jsonData = Run-ASoC-GetIssueCount $global:scanId 'All'
