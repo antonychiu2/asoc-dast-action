@@ -3,6 +3,9 @@ Your code is better and more secure with HCL AppScan.
 
 The HCL AppScan DAST Github Action enables you to run dynamic analysis security testing (DAST) against your application. The DAST scan identifies security vulnerabilities in your code and stores the results in AppScan on Cloud.
 
+Demo Video:
+https://www.youtube.com/watch?v=D9qGgnhM3ic
+
 # Notable Features
 ## 1. Auto Scan Cancellation
 In the event of a user cancelling an action workflow midway through a DAST scan, this action will also automatically cancel the same scan in AppScan on Cloud, thereby freeing up your scan queues. 
