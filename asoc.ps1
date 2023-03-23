@@ -612,3 +612,41 @@ function Run-ASoC-CheckPresenceStatus($presenceId){
       return $false
     }
 }
+
+#Creates a ephemeral presence. Returns the presenceId if successful.
+function Create-EphemeralPresence{
+
+  $presenceName = "Temp instance for Github Action"
+  $presenceFileName = 'presence.zip'
+  $presenceFolder = 'presence'
+  $platform = 'linux_x64'
+
+  #DELETE PRESENCE IF PRESENT
+  $presenceId = Run-ASoC-GetPresenceIdGivenPresenceName($presenceName)
+  Run-ASoC-DeletePresence($presenceId)
+
+  #ENSURE DIRECTORY IS CLEAN AND $presenceFolder FOLDER NAME and $presenceFileName ARE NOT PRESENT
+  Remove-Item $presenceFileName -Recurse -ErrorAction SilentlyContinue
+  Remove-Item $presenceFolder -Recurse -ErrorAction SilentlyContinue
+
+  #CREATE A NEW PRESENCE
+  $presenceId = Run-ASoC-CreatePresence($presenceName)
+  $output = Run-ASoC-DownloadPresence $presenceId $presenceFileName $platform
+
+  Expand-Archive -Path $presenceFileName -DestinationPath $presenceFolder
+
+  #Start The Presence
+  chmod +x "$presenceFolder/startPresenceAsService.sh"
+  & "$presenceFolder/startPresenceAsService.sh" start
+
+  #Check if presence is up and running
+  $presenceStatus = Run-ASoC-CheckPresenceStatus($presenceId)
+
+  if($presenceStatus){
+      Write-Host "Ephemeral Presence is deployed and running"
+      return $presenceId
+  }else{
+    Write-Error "Ephemeral Presence creation failed. Presence status = $presenceStatus"
+    exit 1
+  }
+}
