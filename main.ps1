@@ -61,7 +61,7 @@ Login-ASoC
 #if ephemeral_presence is set to true, we will proceed to set our own presence settings and ignore other presence related settings on the YAML
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
   $ephemeralPresenceId = Create-EphemeralPresence
-  Write-Debug "Ephemeral Presence Id 1: $ephemeralPresenceId"
+  Write-Debug "Ephemeral Presence Id: $ephemeralPresenceId"
   $global:jsonBodyInPSObject.Add("PresenceId",$ephemeralPresenceId)
 
 }else{
@@ -82,6 +82,7 @@ Write-Host $scanOverviewPage -ForegroundColor Green
 
 #IF ephemeral Presence is set, we must force set wait_for_analysis to true regardless of what the user has set. 
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
+  Write-Host "Since ephemeral_presence is true, wait_for_analysis will be set to true if it was not set by user."
   $env:INPUT_WAIT_FOR_ANALYSIS = $true
 }
 
@@ -93,6 +94,7 @@ if($env:INPUT_WAIT_FOR_ANALYSIS -eq $true){
 
   #As soon as the scan is complete, we kill the ephemeral presence if one was set
   if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
+    Write-Host "Deleting ephemeral presence with ID: $ephemeralPresenceId"
     Run-ASoC-DeletePresence($ephemeralPresenceId)
   }
 

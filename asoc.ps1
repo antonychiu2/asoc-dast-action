@@ -534,7 +534,10 @@ function Run-ASoC-DownloadPresence($presenceId, $OutputFileName, $platform){
   #DEBUG
   Write-Debug ($params | Format-Table | Out-String)
 
+  $ProgressPreference = 'SilentlyContinue'
   $jsonOutput = Invoke-WebRequest @params -OutFile $OutputFileName
+  $ProgressPreference = 'Continue'
+  
   return $jsonOutput
 }
 
@@ -644,14 +647,14 @@ function Create-EphemeralPresence{
 
   #Start The Presence
   if($IsLinux){
-    sudo chmod +x "$presenceFolder/startPresenceAsService.sh" | Out-Null
-    & sudo "$presenceFolder/startPresenceAsService.sh" start  | Out-Null
+    sudo chmod +x "$presenceFolder/startPresenceAsService.sh" | Out-String | Write-Output
+    & sudo "$presenceFolder/startPresenceAsService.sh" start  | Out-String | Write-Output
   
   }elseif($IsWindow){
-    & "$presenceFolder/startPresenceAsService.bat" create  | Out-Null
-    & "$presenceFolder/startPresenceAsService.bat" start | Out-Null
+    & "$presenceFolder/startPresenceAsService.bat" create  | Out-String | Write-Output
+    & "$presenceFolder/startPresenceAsService.bat" start | Out-String | Write-Output
   }else{
-    Write-Error "The OS used is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
+    Write-Error "The OS used in the runner is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
     exit 1
   }
 
