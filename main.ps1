@@ -61,6 +61,7 @@ Login-ASoC
 #if ephemeral_presence is set to true, we will proceed to set our own presence settings and ignore other presence related settings on the YAML
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
   $ephemeralPresenceId = Create-EphemeralPresence
+  Write-Debug "Ephemeral Presence Id 1: $ephemeralPresenceId"
   $global:jsonBodyInPSObject.Add("PresenceId",$ephemeralPresenceId)
 
 }else{
@@ -153,10 +154,6 @@ if($env:INPUT_WAIT_FOR_ANALYSIS -eq $true){
     else{
         Write-Host "Job Successful - Scan has found no issues equal to or above the threshold set: $env:INPUT_FAILURE_THRESHOLD." -ForegroundColor Green
     }
-
-
-
-
   }
 }else{
   write-host "Since wait_for_analysis is set to false, the job is now complete. Exiting..."

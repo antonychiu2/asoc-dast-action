@@ -608,7 +608,7 @@ function Run-ASoC-CheckPresenceStatus($presenceId){
       Write-Host "AppScan Presence with ID: $presenceId is in active state. "
       return $true
     }else{
-      Write-Host "AppScan Presence with ID:" $presenceId "is NOT in active state. State =" $jsonOutput.Status
+      Write-Host "AppScan Presence with ID:" $presenceId "is NOT yet in active state. State =" $jsonOutput.Status
       return $false
     }
 }
@@ -644,19 +644,34 @@ function Create-EphemeralPresence{
 
   #Start The Presence
   if($IsLinux){
-    chmod +x "$presenceFolder/startPresenceAsService.sh"
-    & "$presenceFolder/startPresenceAsService.sh" start
+    sudo chmod +x "$presenceFolder/startPresenceAsService.sh" | Out-Null
+    & sudo "$presenceFolder/startPresenceAsService.sh" start  | Out-Null
   
   }elseif($IsWindow){
-    & "$presenceFolder/startPresenceAsService.bat" create
-    & "$presenceFolder/startPresenceAsService.bat" start
+    & "$presenceFolder/startPresenceAsService.bat" create  | Out-Null
+    & "$presenceFolder/startPresenceAsService.bat" start | Out-Null
   }else{
     Write-Error "The OS used is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
     exit 1
   }
 
+  #Pause for 5 seconds for the commands to complete
+  Start-Sleep -Seconds 5
+
   #Check if presence is up and running
-  $presenceStatus = Run-ASoC-CheckPresenceStatus($presenceId)
+
+  $i = 1
+  $checkPresenceMaxCount = 5 #Number of times to check if Presence is up and running
+  $pauseDuration = 5 #pause duration in seconds
+  $presenceStatus = $false
+  while(($i -le $checkPresenceMaxCount) -and ($presenceStatus -eq $false)){
+
+    Write-Host "Checking for Presence Status..."
+    $presenceStatus = Run-ASoC-CheckPresenceStatus($presenceId)
+    Start-Sleep -Seconds $pauseDuration
+    $i = $i + 1
+
+  }
 
   if($presenceStatus){
       Write-Host "Ephemeral Presence is deployed and running"
@@ -665,4 +680,70 @@ function Create-EphemeralPresence{
     Write-Error "Ephemeral Presence creation failed. Presence status = $presenceStatus"
     exit 1
   }
+}
+
+function Create-EphemeralPresenceTest{
+
+  $presenceName = "Temp instance for Github Action"
+  $presenceFileName = 'presence.zip'
+  $presenceFolder = 'presence'
+  <# if($IsLinux){
+    $platform = 'linux_x64'
+  }elseif($IsWindow){
+    $platform = 'win_x64'
+  }else{
+    Write-Error "The OS used is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
+    exit 1
+  } #>
+  
+  #DELETE PRESENCE IF PRESENT
+  $presenceId = Run-ASoC-GetPresenceIdGivenPresenceName($presenceName)
+  Run-ASoC-DeletePresence($presenceId)
+
+  #ENSURE DIRECTORY IS CLEAN AND $presenceFolder FOLDER NAME and $presenceFileName ARE NOT PRESENT
+  Remove-Item $presenceFileName -Recurse -ErrorAction SilentlyContinue
+  Remove-Item $presenceFolder -Recurse -ErrorAction SilentlyContinue
+
+  #CREATE A NEW PRESENCE
+  $presenceId = Run-ASoC-CreatePresence($presenceName)
+  $output = Run-ASoC-DownloadPresence $presenceId $presenceFileName $platform
+
+  Expand-Archive -Path $presenceFileName -DestinationPath $presenceFolder
+
+  #Start The Presence
+<#   if($IsLinux){
+    sudo chmod +x "$presenceFolder/startPresenceAsService.sh"
+    & sudo "$presenceFolder/startPresenceAsService.sh" start
+  
+  }elseif($IsWindow){
+    & "$presenceFolder/startPresenceAsService.bat" create
+    & "$presenceFolder/startPresenceAsService.bat" start
+  }else{
+    Write-Error "The OS used is not supported by AppScan Presence. Please use a supported OS: https://help.hcltechsw.com/appscan/ASoC/Presence_Sysreq.html"
+    exit 1
+  } #>
+
+  #Check if presence is up and running
+
+  $i = 1
+  $checkPresenceMaxCount = 5 #Number of times to check if Presence is up and running
+  $pauseDuration = 5 #pause duration in seconds
+  $presenceStatus = $false
+  while(($i -le $checkPresenceMaxCount) -and ($presenceStatus -eq $false)){
+
+    Write-Host "Checking for Presence Status..."
+    $presenceStatus = Run-ASoC-CheckPresenceStatus($presenceId)
+    Start-Sleep -Seconds $pauseDuration
+    $i = $i + 1
+
+  }
+  
+  return $presenceId
+  <# if($presenceStatus){
+      Write-Host "Ephemeral Presence is deployed and running"
+      return $presenceId
+  }else{
+    Write-Error "Ephemeral Presence creation failed. Presence status = $presenceStatus"
+    exit 1
+  } #>
 }

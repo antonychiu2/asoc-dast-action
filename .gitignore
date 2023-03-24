@@ -9,3 +9,5 @@ tags_to_remove.txt
 *.scant
 *.config
 *.txt
+/presence
+presence.zip
