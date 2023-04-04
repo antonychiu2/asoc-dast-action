@@ -101,7 +101,7 @@ jobs:
           dynamic_scan_type: dast
           starting_URL: 'https://demo.testfire.net?mode=demo'
           login_user: jsmith
-          login_pass: demo1234
+          login_password: demo1234
           network: public
           fail_for_noncompliance: false
           wait_for_analysis: true
