@@ -197,6 +197,16 @@ function Run-ASoC-ScanCompletionChecker($scanID){
     Start-Sleep -Seconds $waitIntervalInSeconds
     $counterTimerInSeconds = $counterTimerInSeconds + $waitIntervalInSeconds
     Write-Host "." -NoNewline
+
+    if($scan_status -eq 'Failed'){
+      $error_message = $output.UserMessage
+      $scanOverviewPage = $env:INPUT_BASEURL + "/main/myapps/" + $env:INPUT_APPLICATION_ID + "/scans/" + $global:scanId
+
+      Write-Error "Scan status: $scan_status. Scan UserMessage: $error_message. For More detail, see Execution log available at your scan view: $scanOverviewPage"
+      
+      Exit 1
+    }
+
   }
   Write-Host ""
 }
