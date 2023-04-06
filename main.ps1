@@ -27,6 +27,7 @@ $env:scanId = ""
 $global:BaseAPIUrl = ""
 $global:BaseAPIUrl = $env:INPUT_BASEURL + "/api/V2"
 Write-Debug $global:BaseAPIUrl
+$global:ephemeralPresenceId = ""
 $global:GithubRunURL = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
 Write-Host "Gitub Run URL: $global:GithubRunURL"
 $scanidFileName = ".\scanid.txt"
@@ -60,9 +61,9 @@ Login-ASoC
 
 #if ephemeral_presence is set to true, we will proceed to set our own presence settings and ignore other presence related settings on the YAML
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
-  $ephemeralPresenceId = Create-EphemeralPresence
-  Write-Debug "Ephemeral Presence Id: $ephemeralPresenceId"
-  $global:jsonBodyInPSObject.Add("PresenceId",$ephemeralPresenceId)
+  Create-EphemeralPresenceWithDocker
+  Write-Debug "Ephemeral Presence Id: $global:ephemeralPresenceId"
+  $global:jsonBodyInPSObject.Add("PresenceId",$global:ephemeralPresenceId)
 
 }else{
   #CHECK NETWORK setting, if private, then set presence ID to the one on the YAML config
@@ -82,7 +83,7 @@ Write-Host $scanOverviewPage -ForegroundColor Green
 
 #IF ephemeral Presence is set, we must force set wait_for_analysis to true regardless of what the user has set. 
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
-  Write-Host "Since ephemeral_presence is true, wait_for_analysis will be set to true if it was not set by user."
+  Write-Host "Since ephemeral_presence is true, wait_for_analysis will be set to true even if it was not set by user."
   $env:INPUT_WAIT_FOR_ANALYSIS = $true
 }
 

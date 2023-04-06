@@ -627,6 +627,65 @@ function Run-ASoC-CheckPresenceStatus($presenceId){
 }
 
 #Creates a ephemeral presence. Returns the presenceId if successful.
+function Create-EphemeralPresenceWithDocker{
+
+  $presenceName = "Temp instance for Github Action"
+  $presenceFileName = 'presence.zip'
+  $presenceFolder = 'presence'
+  $platform = 'linux_x64'
+
+  #DELETE PRESENCE IF PRESENT
+  $presenceId = Run-ASoC-GetPresenceIdGivenPresenceName($presenceName)
+  Run-ASoC-DeletePresence($presenceId)
+
+  #CREATE A NEW PRESENCE
+  $presenceId = Run-ASoC-CreatePresence($presenceName)
+  $output = Run-ASoC-DownloadPresence $presenceId $presenceFileName $platform
+
+
+  $dockerContainerName = 'appscanpresence_container'
+  $dockerImageName = 'appscanpresence_image'
+  $dockerfileName = 'presence_dockerfile'
+
+  #Start presence in a container
+  docker stop $dockerContainerName
+  docker rm $dockerContainerName
+  docker build -f $dockerfileName -t $dockerImageName .
+  docker run --name $dockerContainerName -d $dockerImageName
+
+  #Pause for 5 seconds for the commands to complete
+  Start-Sleep -Seconds 5
+
+  #Get latest docker log
+  Write-Host "Getting Latest Appscan Presence Log from the container:"
+  docker logs $dockerContainerName
+
+  #Check if presence is up and running
+
+  $i = 1
+  $checkPresenceMaxCount = 5 #Number of times to check if Presence is up and running
+  $pauseDuration = 5 #pause duration in seconds
+  $presenceStatus = $false
+  while(($i -le $checkPresenceMaxCount) -and ($presenceStatus -eq $false)){
+
+    Write-Host "Checking for Presence Status from ASoC..."
+    $presenceStatus = Run-ASoC-CheckPresenceStatus($presenceId)
+    Start-Sleep -Seconds $pauseDuration
+    $i = $i + 1
+
+  }
+
+  if($presenceStatus){
+      Write-Host "Ephemeral Presence is deployed and running"
+      $global:ephemeralPresenceId = $presenceId
+  }else{
+    Write-Error "Ephemeral Presence creation failed. Presence status = $presenceStatus"
+    exit 1
+  }
+}
+
+
+#Creates a ephemeral presence. Returns the presenceId if successful.
 function Create-EphemeralPresence{
 
   $presenceName = "Temp instance for Github Action"
