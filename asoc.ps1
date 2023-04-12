@@ -648,11 +648,9 @@ function Create-EphemeralPresenceWithDocker{
   $dockerfileName = 'presence_dockerfile'
 
   #Start presence in a container
-  try{
+  if ((docker ps --format '{{.Names}}') -contains $dockerContainerName) {
     docker stop $dockerContainerName
     docker rm $dockerContainerName
-  } catch {
-    $_ = $null #supress errors
   }
   
   docker build -f $dockerfileName -t $dockerImageName .
