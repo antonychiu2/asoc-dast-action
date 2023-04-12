@@ -8,14 +8,20 @@ Demo Video:
 https://www.youtube.com/watch?v=D9qGgnhM3ic
 
 # Notable Features
-## 1. Auto Scan Cancellation
+
+## 1. Ephemeral Presence
+When this optional feature is enabled, a temporary instance of [AppScan Presence](https://help.hcltechsw.com/appscan/ASoC/Presence1.html) is deployed within the runner. This instance of the AppScan Presence will be used for conducting the DAST scan. Once the scan is complete, this instance of AppScan Presence gets automatically deleted from AppScan on Cloud. 
+
+This feature is useful for running a DAST scan against a temporary instances of your web application that is also deployed within the runner itself which may not be accessible from other locations. To turn on this feature, simply set ephemeral_presence = true.
+
+## 2. Auto Scan Cancellation
 In the event of a user cancelling an action workflow midway through a DAST scan, this action will also automatically cancel the same scan in AppScan on Cloud, thereby freeing up your scan queues. 
 
 ![image](https://user-images.githubusercontent.com/5158535/226275969-d25b1a78-cf8a-4303-89c5-b0f17a051602.png)
 
 ![image](https://user-images.githubusercontent.com/5158535/226275988-599c03d6-aac5-4e16-b6a0-22b77ef92d86.png)
 
-## 2. Auto embed of GITHUB SHA in AppScan on cloud reports
+## 3. Auto embed of GITHUB SHA in AppScan on cloud reports
 The Github SHA associated to the action will be embedded in AppScan on Cloud in the following locations:
 - Scan name (Only if scan_name is not set in the configuration) 
 - Issue comment
@@ -24,12 +30,12 @@ The Github SHA associated to the action will be embedded in AppScan on Cloud in 
 ![image](https://user-images.githubusercontent.com/5158535/226276591-eefa3218-e40b-4937-a7bc-98aa420b0979.png)
 
 
-## 3. Issue count by severity overview
+## 4. Issue count by severity overview
 Issue count are displayed in github workflow logs
 
 ![image](https://user-images.githubusercontent.com/5158535/226276267-81f43cfd-2d46-4d96-b5c3-4432e250d8d8.png)
 
-## 4. Auto download of scan result into scan artifacts
+## 5. Auto download of scan result into scan artifacts
 Scan report (.html) is automatically generated and sent to github workflow overview page
 
 ![image](https://user-images.githubusercontent.com/5158535/226276115-9fb28cc3-535e-4698-8309-c8056b79ad91.png)
@@ -78,6 +84,7 @@ If you don't have an account, register on [HCL AppScan on Cloud (ASoC)](https://
 |fail_for_noncompliance|If **fail_for_noncompliance** is true, fail the job if any non-compliant issues are found in the scan|false|true, false|
 |fail_by_severity|If **fail_by_severity** is set to true, failure_threshold must also be set. This will fail the job if any issues equal to or higher (more severe) than **failure_threshold** are found in the scan|false|false|
 |failure_threshold|(applicable only if **failure_threshold** = true) Set the severity level that indicates a failure. Lesser severities will not be considered a failure. For example, if **failure_threshold** is set to Medium, Informational and/or Low severity issues will not cause a failure. Medium, High, and/or Critical issues will cause a failure.|High|Informational, Low, Medium, High, Critical|
+|ephemeral_presence|If set to true, a temp instance of AppScan Presence will be deployed in the runner and will be used for the scan. When enabled, this will force **wait_for_analysis** to true and **network** to private regardless of user settings | false| true, false|
 
 # Example 1 - DAST scan with basic username and password login method, using the public network
 ```yaml
