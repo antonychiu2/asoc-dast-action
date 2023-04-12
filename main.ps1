@@ -3,8 +3,8 @@ Write-Host "Starting ASoC script"
 
 #DEBUG - To show DEBUG Messages, set $DebugPreference = 'Continue'
 
-$DebugPreference = 'Continue'
-#$DebugPreference = 'SilentlyContinue'
+#$DebugPreference = 'Continue'
+$DebugPreference = 'SilentlyContinue'
 
 Write-Debug "Print environment variables:"
 Write-Host "github.sha: " $env:GITHUB_SHA
@@ -83,7 +83,7 @@ Write-Host $scanOverviewPage -ForegroundColor Green
 
 #IF ephemeral Presence is set, we must force set wait_for_analysis to true regardless of what the user has set. 
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
-  Write-Host "Since ephemeral_presence is true, wait_for_analysis will be set to true even if it was not set by user."
+  Write-Host "Since ephemeral_presence is true, wait_for_analysis will be set to true even if it was not set by user. This is required to keep the runner active and therefore keeps the ephemeral presence alive. "
   $env:INPUT_WAIT_FOR_ANALYSIS = $true
 }
 

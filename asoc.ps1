@@ -691,7 +691,7 @@ function Create-EphemeralPresenceWithDocker{
 #Creates a ephemeral presence. Returns the presenceId if successful.
 function Create-EphemeralPresence{
 
-  $presenceName = "Temp instance for Github Action"
+  $presenceName = "Ephemeral Presence for Github Action"
   $presenceFileName = 'presence.zip'
   $presenceFolder = 'presence'
   if($IsLinux){
