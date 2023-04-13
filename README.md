@@ -12,7 +12,7 @@ https://www.youtube.com/watch?v=D9qGgnhM3ic
 ## 1. Ephemeral Presence
 When this optional feature is enabled, a temporary instance of [AppScan Presence](https://help.hcltechsw.com/appscan/ASoC/Presence1.html) is deployed within the runner. This instance of the AppScan Presence will be used for conducting the DAST scan. Once the scan is complete, this instance of AppScan Presence gets automatically deleted from AppScan on Cloud. 
 
-![Ephemeral Presence drawio](https://user-images.githubusercontent.com/5158535/231660231-827f025f-ad33-4138-b551-fda3455134bf.png)
+![Ephemeral Presence drawio](https://user-images.githubusercontent.com/5158535/231660384-557c6567-d513-40d8-8978-469eb5dd2ecc.png)
 
 This feature is useful for running a DAST scan against a temporary instances of your web application that is also deployed within the runner itself which may not be accessible from other locations. To turn on this feature, simply set ephemeral_presence = true.
 
@@ -100,7 +100,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run ASoC DAST Scan
-        uses: antonychiu2/asoc-dast-action@v1.0.3
+        uses: antonychiu2/asoc-dast-action@v1.0.4
         with:
           baseurl:  https://cloud.appscan.com
           asoc_key: ${{secrets.ASOC_KEY}}
@@ -109,6 +109,7 @@ jobs:
           scan_type: 'staging'
           dynamic_scan_type: dast
           starting_URL: 'https://demo.testfire.net?mode=demo'
+          login_method: userpass
           login_user: jsmith
           login_password: demo1234
           network: public
@@ -134,7 +135,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Run ASoC DAST Scan
-        uses: antonychiu2/asoc-dast-action@v1.0.3
+        uses: antonychiu2/asoc-dast-action@v1.0.4
         with:
           baseurl:  https://cloud.appscan.com
           asoc_key: ${{secrets.ASOC_KEY}}
@@ -147,6 +148,38 @@ jobs:
           presence_id: f185efda-67bf-ed11-ba76-14cb65723612
           fail_for_noncompliance: false
           wait_for_analysis: true
+      - uses: actions/upload-artifact@v3
+        name: Upload HCL AppScan HTML Report to Github Artifacts
+        with:
+          name: AppScan Security Scan HTML Report 
+          path: '**/AppScan*.html'
+        if: success() || failure()
+```
+# Example 3 - DAST scan using an Ephemeral Presence
+```yaml
+name: "HCL AppScan DAST"
+on:
+  workflow_dispatch
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run ASoC DAST Scan
+        uses: antonychiu2/asoc-dast-action@v1.0.4
+        with:
+          baseurl:  https://cloud.appscan.com
+          asoc_key: ${{secrets.ASOC_KEY}}
+          asoc_secret: ${{secrets.ASOC_SECRET}}
+          application_id: acd3ef50-6276-461d-8514-abc6e7113577
+          scan_type: 'staging'
+          dynamic_scan_type: dast
+          starting_URL: 'https://demo.testfire.net'
+          login_method: userpass
+          login_user: jsmith
+          login_password: demo1234
+          ephemeral_presence: true
       - uses: actions/upload-artifact@v3
         name: Upload HCL AppScan HTML Report to Github Artifacts
         with:
