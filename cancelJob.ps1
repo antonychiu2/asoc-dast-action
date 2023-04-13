@@ -1,7 +1,7 @@
 #During Job Cancellation, we want to also try to stop the scan if it was already initiated
 
 #DEBUG
-dir env:
+#dir env:
 #$DebugPreference = "Continue"
 $DebugPreference = "SilentlyContinue"
 
