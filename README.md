@@ -11,6 +11,7 @@ https://www.youtube.com/watch?v=D9qGgnhM3ic
 
 ## 1. Ephemeral Presence
 When this optional feature is enabled, a temporary instance of [AppScan Presence](https://help.hcltechsw.com/appscan/ASoC/Presence1.html) is deployed within the runner. This instance of the AppScan Presence will be used for conducting the DAST scan. Once the scan is complete, this instance of AppScan Presence gets automatically deleted from AppScan on Cloud. 
+
 ![Ephemeral Presence drawio](https://user-images.githubusercontent.com/5158535/231660231-827f025f-ad33-4138-b551-fda3455134bf.png)
 
 This feature is useful for running a DAST scan against a temporary instances of your web application that is also deployed within the runner itself which may not be accessible from other locations. To turn on this feature, simply set ephemeral_presence = true.
