@@ -2,7 +2,8 @@
 
 #DEBUG
 dir env:
-$DebugPreference = "Continue"
+#$DebugPreference = "Continue"
+$DebugPreference = "SilentlyContinue"
 
 #INITIALIZE VARIABLES
 $scanidFileName = ".\scanid.txt"
