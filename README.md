@@ -155,7 +155,7 @@ jobs:
           path: '**/AppScan*.html'
         if: success() || failure()
 ```
-# Example 3 - DAST scan using an Ephemeral Presence
+# Example 3 - DAST scan using ephemeral presence
 ```yaml
 name: "HCL AppScan DAST"
 on:
