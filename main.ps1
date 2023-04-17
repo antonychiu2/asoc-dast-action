@@ -32,7 +32,7 @@ $global:GithubRunURL = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/ru
 Write-Host "Gitub Run URL: $global:GithubRunURL"
 $scanidFileName = ".\scanid.txt"
 $ephemeralPresenceIdFileName =".\ephemeralPresenceId.txt"
-$global:ephemeralPresenceName = "Github $env:GITHUB_SHA"
+$global:ephemeralPresenceName = "Github Runner $env:RUNNER_TRACKING_ID"
 
 #${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
