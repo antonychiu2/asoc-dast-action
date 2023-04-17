@@ -632,7 +632,7 @@ function Run-ASoC-CheckPresenceStatus($presenceId){
 #Creates a ephemeral presence. Returns the presenceId if successful.
 function Create-EphemeralPresenceWithDocker{
 
-  $global:ephemeralPresenceName = "Github $env:GITHUB_SHA"
+  #$global:ephemeralPresenceName = "Github $env:GITHUB_SHA"
   $presenceName = $global:ephemeralPresenceName
   $presenceFileName = 'presence.zip'
   $presenceFolder = 'presence'
