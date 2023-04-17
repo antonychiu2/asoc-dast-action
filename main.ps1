@@ -8,8 +8,8 @@ $DebugPreference = 'Continue'
 
 Write-Debug "Print environment variables:"
 Write-Host "github.sha: " $env:GITHUB_SHA
-ls -l
-dir env:
+#ls -l
+#dir env:
 
 #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls12
 
@@ -31,6 +31,8 @@ $global:ephemeralPresenceId = ""
 $global:GithubRunURL = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
 Write-Host "Gitub Run URL: $global:GithubRunURL"
 $scanidFileName = ".\scanid.txt"
+$ephemeralPresenceIdFileName =".\ephemeralPresenceId.txt"
+$global:ephemeralPresenceName = "Github $env:GITHUB_SHA"
 
 #${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
@@ -61,9 +63,14 @@ Login-ASoC
 
 #if ephemeral_presence is set to true, we will proceed to set our own presence settings and ignore other presence related settings on the YAML
 if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
+  
   Create-EphemeralPresenceWithDocker
   Write-Debug "Ephemeral Presence Id: $global:ephemeralPresenceId"
   $global:jsonBodyInPSObject.Add("PresenceId",$global:ephemeralPresenceId)
+
+  #Save ephemeralPresence ID in a file
+  $global:ephemeralPresenceId | Out-File -FilePath $ephemeralPresenceIdFileName -Force
+
 
 }else{
   #CHECK NETWORK setting, if private, then set presence ID to the one on the YAML config
@@ -95,8 +102,8 @@ if($env:INPUT_WAIT_FOR_ANALYSIS -eq $true){
 
   #As soon as the scan is complete, we kill the ephemeral presence if one was set
   if($env:INPUT_EPHEMERAL_PRESENCE -eq $true){
-    Write-Host "Deleting ephemeral presence with ID: $ephemeralPresenceId"
-    Run-ASoC-DeletePresence($ephemeralPresenceId)
+    Write-Host "Deleting ephemeral presence with ID: $global:ephemeralPresenceId"
+    Run-ASoC-DeletePresence($global:ephemeralPresenceId)
   }
 
   #Update comment on ASoC issues

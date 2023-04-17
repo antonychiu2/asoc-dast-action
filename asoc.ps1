@@ -565,6 +565,7 @@ function Run-ASoC-DeletePresence($presenceId){
   #DEBUG
   Write-Debug ($params | Format-Table | Out-String)
 
+  $response = ""
   try {
     $response = Invoke-WebRequest @params
     Write-Host "Successfully deleted presence with ID: $presenceId"
@@ -573,8 +574,10 @@ function Run-ASoC-DeletePresence($presenceId){
   }
   catch {
       Write-Host "Failed to delete presence with ID: $presenceId"
-  
-  }
+      Write-Host "The request failed with error: $($_.Exception.Message)"
+      Write-Host "The request failed with HTTP status code $($response.StatusCode)"
+      Write-Host "The failure message is: $($response.StatusDescription)"
+    }
   
 }
 
@@ -629,14 +632,18 @@ function Run-ASoC-CheckPresenceStatus($presenceId){
 #Creates a ephemeral presence. Returns the presenceId if successful.
 function Create-EphemeralPresenceWithDocker{
 
-  $presenceName = "Ephemeral Presence for Github Action"
+  $global:ephemeralPresenceName = "Github $env:GITHUB_SHA"
+  $presenceName = $global:ephemeralPresenceName
   $presenceFileName = 'presence.zip'
   $presenceFolder = 'presence'
   $platform = 'linux_x64'
 
   #DELETE PRESENCE IF PRESENT
   $presenceId = Run-ASoC-GetPresenceIdGivenPresenceName($presenceName)
-  Run-ASoC-DeletePresence($presenceId)
+  if($presenceId){
+    Run-ASoC-DeletePresence($presenceId)
+  }
+  
 
   #CREATE A NEW PRESENCE
   $presenceId = Run-ASoC-CreatePresence($presenceName)
@@ -648,7 +655,7 @@ function Create-EphemeralPresenceWithDocker{
   $dockerfileName = 'presence_dockerfile'
 
   #Start presence in a container
-  if ((docker ps --format '{{.Names}}') -contains $dockerContainerName) {
+  if ((docker ps -a --format '{{.Names}}') -contains $dockerContainerName) {
     docker stop $dockerContainerName
     docker rm $dockerContainerName
   }
